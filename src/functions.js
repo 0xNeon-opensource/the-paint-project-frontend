@@ -87,10 +87,11 @@ function set_all_url_params(params, {replace_history_state=false}={}) {
 			history.pushState(null, document.title, new_url);
 		}
 	} catch(error) {
-		location.hash = new_hash;
+		// location.hash = new_hash;
+		console.log('this error would have caused this code to run: `location.hash = new_hash;`');
 	}
 
-	$G.triggerHandler("change-url-params");
+	// $G.triggerHandler("change-url-params");
 }
 
 function update_magnified_canvas_size(){
