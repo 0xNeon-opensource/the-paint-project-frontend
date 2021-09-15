@@ -607,7 +607,7 @@ window.menus = {
 		{
 			item: `${localize("Mint a &Paint")}...`,
 			speech_recognition: [
-				"edit colors", "edit color", "edit custom colors", "edit custom color",
+				"Mint", "Mint a paint", "Mint a color", "edit colors", "edit color", "edit custom colors", "edit custom color",
 				"pick custom color", "choose custom color", "pick a custom color", "choose a custom color",
 				"edit last color", "create new color", "choose new color", "create a new color", "pick a new color",
 			],
@@ -684,6 +684,27 @@ window.menus = {
 				});
 			},
 			description: localize("Saves the current palette of colors to a file."),
+		}
+	],
+	[localize("&Wallet")]: [
+		{
+			item: localize("&Connect wallet"),
+			speech_recognition: [
+				"help topics", "help me", "show help", "help", "show help window", "show help topics", "open help",
+				"help viewer", "show help viewer", "open help viewer",
+			],
+			action: ()=> {blockchain.connectWallet(); },
+			description: localize("Displays Help for the current task or command."),
+		},
+		MENU_DIVIDER,
+		{
+			item: localize("&Your owned paints"),
+			speech_recognition: [
+				"Your owned paints",
+			],
+			action: ()=> { show_about_paint(); },
+			description: localize("Displays information about this application."),
+			//description: localize("Displays program information, version number, and copyright."),
 		}
 	],
 	[localize("&Help")]: [

@@ -40,7 +40,7 @@
 		<meta name="twitter:card" content="summary_large_image">
 		<meta name="twitter:site" content="@isaiahodhner">
 		<meta name="twitter:creator" content="@isaiahodhner">
-		
+
 		<!-- ETHERS.JS -->
 		<script src="https://cdn.ethers.io/lib/ethers-5.2.umd.min.js" type="application/javascript"></script>
 
@@ -727,6 +727,19 @@
 			load_language(current_language);
 		</script>
 
+		<!-- REACT -->
+		<div id="like_button_container"></div>
+
+		<script src="https://unpkg.com/react@16/umd/react.development.js" crossorigin>
+		</script>  <script src="https://unpkg.com/react-dom@16/umd/react-dom.development.js" crossorigin></script>
+
+		<script src="./src/blockchain.js"></script>
+
+		<script>
+			const blockchain = new Blockchain();
+			blockchain.componentDidMount();
+		</script>
+		
 		<script src="lib/pep.js"></script>
 		<script src="lib/canvas.toBlob.js"></script>
 		<script src="lib/gif.js/gif.js"></script>

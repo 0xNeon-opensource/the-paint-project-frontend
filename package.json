@@ -105,9 +105,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/1j01/jspaint.git"
+    "url": "git+https://github.com/1j01/jspaint.git"
   },
   "bugs": {
     "url": "https://github.com/1j01/jspaint/issues"
-  }
+  },
+  "homepage": "https://github.com/1j01/jspaint#readme",
+  "directories": {
+    "lib": "lib"
+  },
+  "license": "ISC"
 }

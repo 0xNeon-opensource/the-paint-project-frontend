@@ -321,6 +321,16 @@ $menu_bar.on("info", (_event, info) => {
 $menu_bar.on("default-info", ()=> {
 	$status_text.default();
 });
+const accountNumberLabel = document.createElement("label");
+$(accountNumberLabel).css({
+	left: 0,
+	top: 0,
+	textAlign: "right",
+	display: "inline-block",
+	lineHeight: "20px",
+	fontWeight: "bold"
+})
+$menu_bar.append(accountNumberLabel);
 // </menu bar>
 
 let $toolbox = $ToolBox(tools);
