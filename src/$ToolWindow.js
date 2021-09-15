@@ -7,7 +7,7 @@ function $ToolWindow($component){
 	$w.$title = $(E("span")).addClass("window-title").appendTo($w.$titlebar);
 	$w.$x = $(E("button")).addClass("window-close-button window-button").appendTo($w.$titlebar);
 	$w.$content = $(E("div")).addClass("window-content").appendTo($w);
-	
+
 	if($component){
 		$w.addClass("component-window");
 	}
@@ -15,6 +15,10 @@ function $ToolWindow($component){
 	$w.attr("touch-action", "none");
 	
 	$w.$x.on("click", () => {
+		// Remove the colors list element from the DOM if it's that window on close.
+		if ($w.isAllColorsWindow) {
+			document.getElementById("allColorsContainer").remove();
+		}
 		$w.close();
 	});
 	$w.$x.on("mousedown selectstart", e => {
@@ -185,6 +189,9 @@ function $ToolWindow($component){
 	$w.title = title => {
 		if(title){
 			$w.$title.text(title);
+			if (!!allColorsTitle && title == allColorsTitle) {
+				$w.isAllColorsWindow = true;
+			}
 			return $w;
 		}else{
 			return $w.$title.text();

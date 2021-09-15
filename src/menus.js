@@ -616,75 +616,75 @@ window.menus = {
 			},
 			description: localize("Creates a new color."),
 		},
-		{
-			item: localize("&Get Colors"),
-			speech_recognition: [
-				"get colors", "load colors", "load color palette", "load palette", "load color palette file", "load palette file", "load list of colors",
-			],
-			action: ()=> {
-				get_FileList_from_file_select_dialog((files)=> {
-					const file = files[0];
-					AnyPalette.loadPalette(file, (err, new_palette)=> {
-						if(err){
-							// localize("Unexpected file format.");
-							show_error_message("This file is not in a format that Paint recognizes, or no colors were found.");
-						}else{
-							palette = new_palette.map((color)=> color.toString());
-							$colorbox.rebuild_palette();
-							window.console && console.log(`Loaded palette: ${palette.map(()=> `%c█`).join("")}`, ...palette.map((color)=> `color: ${color};`));
-						}
-					});
-				});
-			},
-			description: localize("Uses a previously saved palette of colors."),
-		},
-		{
-			item: localize("&Save Colors"),
-			speech_recognition: [
-				"save colors", "save list of colors", "save color palette", "save palette", "save color palette file", "save palette file",
-			],
-			action: ()=> {
-				const ap = new AnyPalette.Palette();
-				ap.name = "JS Paint Saved Colors";
-				ap.numberOfColumns = 16; // 14?
-				for (const color of palette) {
-					const [r, g, b] = get_rgba_from_color(color);
-					ap.push(new AnyPalette.Color({
-						red: r / 255,
-						green: g / 255,
-						blue: b / 255,
-					}));
-				}
-				const palette_types_unordered = {};
-				for (const [format_id, format] of Object.entries(AnyPalette.formats)) {
-					if (format.write) {
-						palette_types_unordered[format_id] = `${format.name} (${
-							format.fileExtensions.map((extension)=> `*.${extension}`).join(";")
-						})`;
-					}
-				}
-				const palette_types_ordered = Object.keys(palette_types_unordered).sort((a, b)=>
-					// first option is default
-					(b === "RIFF_PALETTE") - (a === "RIFF_PALETTE") ||
-					(b === "GIMP_PALETTE") - (a === "GIMP_PALETTE") ||
-					0
-				).reduce(
-					(obj, key) => {
-						obj[key] = palette_types_unordered[key];
-						return obj;
-					},
-					{}
-				);
-				choose_file_name_and_type(localize("Save Colors"), localize("untitled.pal"), palette_types_ordered, (palette_file_name, format_id)=> {
-					const file_content = AnyPalette.writePalette(ap, AnyPalette.formats[format_id]);
-					const blob = new Blob([file_content], {type: "text/plain"});
-					sanity_check_blob(blob, ()=> {
-						saveAs(blob, palette_file_name);
-					});
-				});
-			},
-			description: localize("Saves the current palette of colors to a file."),
-		}
+		// {
+		// 	item: localize("&Get Colors"),
+		// 	speech_recognition: [
+		// 		"get colors", "load colors", "load color palette", "load palette", "load color palette file", "load palette file", "load list of colors",
+		// 	],
+		// 	action: ()=> {
+		// 		get_FileList_from_file_select_dialog((files)=> {
+		// 			const file = files[0];
+		// 			AnyPalette.loadPalette(file, (err, new_palette)=> {
+		// 				if(err){
+		// 					// localize("Unexpected file format.");
+		// 					show_error_message("This file is not in a format that Paint recognizes, or no colors were found.");
+		// 				}else{
+		// 					palette = new_palette.map((color)=> color.toString());
+		// 					$colorbox.rebuild_palette();
+		// 					window.console && console.log(`Loaded palette: ${palette.map(()=> `%c█`).join("")}`, ...palette.map((color)=> `color: ${color};`));
+		// 				}
+		// 			});
+		// 		});
+		// 	},
+		// 	description: localize("Uses a previously saved palette of colors."),
+		// },
+		// {
+		// 	item: localize("&Save Colors"),
+		// 	speech_recognition: [
+		// 		"save colors", "save list of colors", "save color palette", "save palette", "save color palette file", "save palette file",
+		// 	],
+		// 	action: ()=> {
+		// 		const ap = new AnyPalette.Palette();
+		// 		ap.name = "JS Paint Saved Colors";
+		// 		ap.numberOfColumns = 16; // 14?
+		// 		for (const color of palette) {
+		// 			const [r, g, b] = get_rgba_from_color(color);
+		// 			ap.push(new AnyPalette.Color({
+		// 				red: r / 255,
+		// 				green: g / 255,
+		// 				blue: b / 255,
+		// 			}));
+		// 		}
+		// 		const palette_types_unordered = {};
+		// 		for (const [format_id, format] of Object.entries(AnyPalette.formats)) {
+		// 			if (format.write) {
+		// 				palette_types_unordered[format_id] = `${format.name} (${
+		// 					format.fileExtensions.map((extension)=> `*.${extension}`).join(";")
+		// 				})`;
+		// 			}
+		// 		}
+		// 		const palette_types_ordered = Object.keys(palette_types_unordered).sort((a, b)=>
+		// 			// first option is default
+		// 			(b === "RIFF_PALETTE") - (a === "RIFF_PALETTE") ||
+		// 			(b === "GIMP_PALETTE") - (a === "GIMP_PALETTE") ||
+		// 			0
+		// 		).reduce(
+		// 			(obj, key) => {
+		// 				obj[key] = palette_types_unordered[key];
+		// 				return obj;
+		// 			},
+		// 			{}
+		// 		);
+		// 		choose_file_name_and_type(localize("Save Colors"), localize("untitled.pal"), palette_types_ordered, (palette_file_name, format_id)=> {
+		// 			const file_content = AnyPalette.writePalette(ap, AnyPalette.formats[format_id]);
+		// 			const blob = new Blob([file_content], {type: "text/plain"});
+		// 			sanity_check_blob(blob, ()=> {
+		// 				saveAs(blob, palette_file_name);
+		// 			});
+		// 		});
+		// 	},
+		// 	description: localize("Saves the current palette of colors to a file."),
+		// }
 	],
 	[localize("&Wallet")]: [
 		{
@@ -698,7 +698,7 @@ window.menus = {
 		},
 		MENU_DIVIDER,
 		{
-			item: localize("&Your owned paints"),
+			item: localize("Your &Paints"),
 			speech_recognition: [
 				"Your owned paints",
 			],
@@ -706,6 +706,16 @@ window.menus = {
 			description: localize("Displays information about this application."),
 			//description: localize("Displays program information, version number, and copyright."),
 		}
+	],
+	[localize("&Colors")]: [
+		{
+			item: localize("&Colors on the Blockchain"),
+			speech_recognition: [
+				"Colors on the Blockchain",
+			],
+			action: ()=> { show_all_colors_window(); },
+			description: localize("Displays Help for the current task or command."),
+		},
 	],
 	[localize("&Help")]: [
 		{
@@ -810,97 +820,6 @@ window.menus = {
 			},
 			description: localize("Draws randomly with different tools."),
 		},*/
-		{
-			item: localize("&Multi-User"),
-			submenu: [
-				{
-					item: localize("&New Session From Document"),
-					speech_recognition: [
-						"new session from document",
-						"session from document",
-						"online session",
-						"enable multi-user",
-						"enable multiplayer",
-						"start multi-user",
-						"start multiplayer",
-						"start collaboration",
-						"start collaborating",
-						"multi-user mode",
-						"multiplayer mode",
-						"collaboration mode",
-						"collaborative mode",
-						"collaborating mode",
-						"online mode",
-						"go online",
-						"share canvas",
-						"play with friends",
-						"draw with friends",
-						"draw together with friends",
-						"draw together",
-						"multiplayer",
-						"multi-user",
-						"collaborate",
-						"collaboration",
-						"collaborative",
-						"collaborating",
-					],
-					action: ()=> {
-						show_multi_user_setup_dialog(true);
-					},
-					description: localize("Starts a new multi-user session from the current document."),
-				},
-				{
-					item: localize("New &Blank Session"),
-					speech_recognition: [
-						"new blank session",
-						"new empty session",
-						"new fresh session",
-						"new blank multi-user session",
-						"new empty multi-user session",
-						"new fresh multi-user session",
-						"new blank multiplayer session",
-						"new empty multiplayer session",
-						"new fresh multiplayer session",
-						"new multi-user session",
-						"new multiplayer session",
-						"new collaboration session",
-						"new collaborative session",
-						"start multi-user session",
-						"start multiplayer session",
-						"start collaboration session",
-						"start collaborative session",
-						"start multi-user with a new",
-						"start multiplayer with a new",
-						"start collaboration with a new",
-						"start collaborating with a new",
-						"start multi-user with a blank",
-						"start multiplayer with a blank",
-						"start collaboration with a blank",
-						"start collaborating with a blank",
-						"start multi-user with an empty",
-						"start multiplayer with an empty",
-						"start collaboration with an empty",
-						"start collaborating with an empty",
-						"start multi-user with new",
-						"start multiplayer with new",
-						"start collaboration with new",
-						"start collaborating with new",
-						"start multi-user with blank",
-						"start multiplayer with blank",
-						"start collaboration with blank",
-						"start collaborating with blank",
-						"start multi-user with empty",
-						"start multiplayer with empty",
-						"start collaboration with empty",
-						"start collaborating with empty",
-					],
-					action: ()=> {
-						show_multi_user_setup_dialog(false);
-					},
-					description: localize("Starts a new multi-user session from an empty document."),
-				},
-			]
-		},
 		{
 			item: localize("&Themes"),
 			submenu: [
@@ -1154,15 +1073,6 @@ window.menus = {
 				return !location.hash.match(/eye-gaze-mode/i);
 			},
 			description: localize("Arranges the color box vertically."),
-		},
-		MENU_DIVIDER,
-		{
-			item: localize("Manage Storage"),
-			speech_recognition: [
-				// This is a duplicate menu item (for easy access), so it doesn't need speech recognition data here.
-			],
-			action: ()=> { manage_storage(); },
-			description: localize("Manages storage of previously created or opened pictures."),
 		},
 		MENU_DIVIDER,
 		{

@@ -739,6 +739,68 @@
 		<script src="lib/os-gui/$MenuBar.js"></script>
 		<script src="lib/imagetracer_v1.2.5.js"></script>
 
+				<!-- React and blockchain -->
+
+		<!-- ABIs -->
+		<!-- <script id="thePaintProjectJson" type="application/json" src="./src/abi/ThePaintProject.json"></script> -->
+
+		<script src="https://unpkg.com/react@16/umd/react.development.js" crossorigin>
+		</script>  <script src="https://unpkg.com/react-dom@16/umd/react-dom.development.js" crossorigin></script>
+
+		<script src="./src/blockchain.js"></script>
+
+		<script>
+			const blockchain = new Blockchain();
+			blockchain.componentDidMount();
+		</script>
+
+		<script>
+			// to create a shared variable
+			const allColorsTitle = "Colors on the Blockchain"
+		</script>
+		<div id="allColors" hidden>
+			<article class="news-entry" id="news-2020-accessibility-update">
+				<h1>The first colors on the blockchain</h1>
+				<p>You can also view the Paints on <a href="https://opensea.io/" target="_blank" rel="noopener noreferrer">OpenSea</a></p>
+				<i>Click a color to see it's on-chain data rendered in a new tab</i>
+				<div id="blockchainColorsDiv"></div>
+			<style>
+				#allColors {
+					background: white;
+					color: black;
+				}
+				.allColors-entry {
+					padding: 20px;
+					max-width: 563px;
+				}
+				.allColors-entry > h1 {
+					font-size: 1.3em;
+					margin: 0;
+					margin-bottom: 0.3em;
+				}
+				.allColors-entry > time {
+					font-size: 1.2em;
+					color: gray;
+				}
+				.allColors-entry > h2 {
+					font-size: 1.9em;
+					font-weight: normal;
+					margin: 0;
+					margin-bottom: 0.3em;
+					margin-top: 0.3em;
+				}
+				.allColors-entry .new {
+					color: green;
+				}
+				.allColors-entry .bad {
+					color: #d11a29;
+				}
+			</style>
+		</div>
+
+
+		<!-- End React and blockchain -->
+
 		<script src="src/functions.js"></script>
 		<script src="src/helpers.js"></script>
 		<script src="src/storage.js"></script>
@@ -757,22 +819,7 @@
 		<script src="src/tools.js"></script>
 		<!--<script src="src/extra-tools.js"></script>-->
 
-		<!-- React and blockchain -->
 
-		<!-- ABIs -->
-		<!-- <script id="thePaintProjectJson" type="application/json" src="./src/abi/ThePaintProject.json"></script> -->
-
-		<script src="https://unpkg.com/react@16/umd/react.development.js" crossorigin>
-		</script>  <script src="https://unpkg.com/react-dom@16/umd/react-dom.development.js" crossorigin></script>
-
-		<script src="./src/blockchain.js"></script>
-
-		<script>
-			const blockchain = new Blockchain();
-			blockchain.componentDidMount();
-		</script>
-
-		<!-- End React and blockchain -->
 		
 		<script src="src/edit-colors.js"></script>
 		<script src="src/manage-storage.js"></script>

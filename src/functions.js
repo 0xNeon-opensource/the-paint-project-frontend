@@ -931,6 +931,8 @@ function show_resource_load_error_message(error){
 let $about_paint_window;
 const $about_paint_content = $("#about-paint");
 let $news_window;
+let $all_colors_window;
+const $all_colors_content = $("#allColors");
 const $this_version_news = $("#news");
 let $latest_news = $this_version_news;
 
@@ -1070,6 +1072,117 @@ function show_news(){
 	$news_window.center(); // @XXX - but it helps tho
 }
 
+function show_all_colors_window(){
+	if($all_colors_window){
+		$all_colors_window.close();
+	}
+	$all_colors_window = $ToolWindow().title(allColorsTitle);
+	$all_colors_window.addClass("news-window squish");
+
+
+	// const $latest_entries = $latest_news.find(".news-entry");
+	// const latest_entry = $latest_entries[$latest_entries.length - 1];
+	// window.console && console.log("LATEST MEWS:", $latest_news);
+	// window.console && console.log("LATEST ENTRY:", latest_entry);
+
+	// const $all_colors_content = $latest_news.find("style");
+	// $all_colors_content.find("style").remove();
+	// $all_colors_content.append($all_colors_content); // in case $this_version_news is $latest_news
+
+	$all_colors_window.$content.append($all_colors_content.removeAttr("hidden"));
+
+	$all_colors_window.center();
+	$all_colors_window.center(); // @XXX - but it helps tho
+
+	const colorContainerHeight = 75;
+	const colorContainerWidth = 75;
+	
+	let mainContainer = document.createElement("div");
+	mainContainer.id = 'allColorsContainer'
+
+	const numColorsPerRow = 10;
+	const maxNumRowsPerPage = 5;
+	const wiggleRoom = colorContainerWidth - 10;
+	const mainContainerWidth = calculateMainContainerWidth(
+		blockchain.state.colors.length, numColorsPerRow, colorContainerWidth, wiggleRoom
+	);
+	const mainContainerHeight = calculateMainContainerHeight(
+		blockchain.state.colors.length,
+		numColorsPerRow,
+		maxNumRowsPerPage,
+		colorContainerHeight,
+		wiggleRoom
+	);
+	$(mainContainer).css({
+		height: mainContainerHeight,
+		width: mainContainerWidth,
+		display: "inline-block",
+		backgroundColor: "red",
+		borderStyle: "solid",
+	});
+	document.getElementById("blockchainColorsDiv").appendChild(mainContainer);
+
+	blockchain.state.colors.forEach(color => {
+		let colorContainer = document.createElement("div");
+		$(colorContainer).css({
+			height: colorContainerHeight,
+			width: colorContainerWidth,
+			display: "inline-block",
+			backgroundColor: "gray",
+			borderStyle: "solid",
+		});
+
+		let colorDot = document.createElement("div");
+		$(colorDot).css({
+			height: 50,
+			width: 50,
+			borderRadius: '50%',
+			borderStyle: "solid",
+			borderWidth: 1,
+			display: "inline-block",
+			backgroundColor: color,
+			marginLeft: 10,
+			marginTop: 10,
+		});
+
+		let colorValue = document.createElement("p");
+		colorValue.innerHTML = color;
+		$(colorDot).css({
+			display: "inline-block",
+			// marginLeft: 25,
+			// marginTop: 25,
+		});
+
+		mainContainer.appendChild(colorContainer);
+		colorContainer.appendChild(colorDot);
+		colorContainer.appendChild(colorValue);
+	});
+}
+
+
+function calculateMainContainerWidth(colorCount, numColorsPerRow, colorContainerWidth, wiggleRoom) {
+	if (colorCount < numColorsPerRow) {
+		// it's just one row; fit mainContainer to number of colors
+		return colorContainerWidth * colorCount + wiggleRoom;
+	} else {
+		// multiple rows
+		return colorContainerWidth * numColorsPerRow + wiggleRoom;
+	}
+}
+
+function calculateMainContainerHeight(colorCount, numColorsPerRow, maxNumRowsPerPage, colorContainerHeight, wiggleRoom) {
+	if (colorCount > numColorsPerRow * maxNumRowsPerPage) {
+		// This page is maxed out
+		return maxNumRowsPerPage * colorContainerHeight + wiggleRoom;
+	}
+	if (colorCount % numColorsPerRow == 0) {
+		// Colors fully fill each row
+		return colorCount / numColorsPerRow * colorContainerHeight + wiggleRoom;
+	} else {
+		// Add an extra row for overflow colors
+		return (colorCount / numColorsPerRow + 1) * colorContainerHeight + wiggleRoom;
+	}
+}
 
 // @TODO: DRY between these functions and open_from_* functions further?
 

@@ -1,6 +1,4 @@
 'use strict';
-// import { ethers, Contract } from 'ethers';
-// const { ethers } = require("ethers");
 
 const e = React.createElement;
 
@@ -31370,6 +31368,8 @@ class Blockchain extends React.Component {
       this.state.paintProjectContract = paintProjectContract;
       console.log('this.state.paintProjectContract :>> ', this.state.paintProjectContract);
 
+      await this.showWalletInfoIfConnected();
+
       await this.updateColorList(paintProjectContract);
 
     } else {
@@ -31391,6 +31391,10 @@ class Blockchain extends React.Component {
 
   async connectWallet() {
     await this.state.provider.send("eth_requestAccounts", []);
+    await this.showWalletInfoIfConnected();
+  }
+
+  async showWalletInfoIfConnected() {
     const signer = this.state.provider.getSigner();
     const account = await signer.getAddress();
     this.state.account = account;
@@ -31408,17 +31412,6 @@ class Blockchain extends React.Component {
 
   }
 
-  render() {
-    if (this.state.liked) {
-      return 'You liked this.';
-    }
-
-    return e(
-      'button',
-      { onClick: () => this.setState({ liked: true }) },
-      'Like'
-    );
-  }
 }
 
 // const domContainer = document.querySelector('#like_button_container');
