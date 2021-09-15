@@ -331,6 +331,8 @@ $(accountNumberLabel).css({
 	fontWeight: "bold"
 })
 $menu_bar.append(accountNumberLabel);
+$('.mint-menu-button').css('font-weight', 'bold');
+$('.wallet-menu-button').css('font-weight', 'bold');
 // </menu bar>
 
 let $toolbox = $ToolBox(tools);

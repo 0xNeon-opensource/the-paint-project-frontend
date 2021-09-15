@@ -656,7 +656,7 @@ function choose_color(initial_color, callback) {
 	});
 	$w.$Button(localize("Mint"), () => {
 		const colorToMint = hexInput.value;
-		console.log('attempting to mint', colorToMint);
+		blockchain.mint(colorToMint);
 	});
 
 	$left.append($w.$buttons);

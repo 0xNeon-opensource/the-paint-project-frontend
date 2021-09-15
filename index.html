@@ -726,19 +726,6 @@
 			}
 			load_language(current_language);
 		</script>
-
-		<!-- REACT -->
-		<div id="like_button_container"></div>
-
-		<script src="https://unpkg.com/react@16/umd/react.development.js" crossorigin>
-		</script>  <script src="https://unpkg.com/react-dom@16/umd/react-dom.development.js" crossorigin></script>
-
-		<script src="./src/blockchain.js"></script>
-
-		<script>
-			const blockchain = new Blockchain();
-			blockchain.componentDidMount();
-		</script>
 		
 		<script src="lib/pep.js"></script>
 		<script src="lib/canvas.toBlob.js"></script>
@@ -769,6 +756,24 @@
 		<script src="src/tool-options.js"></script>
 		<script src="src/tools.js"></script>
 		<!--<script src="src/extra-tools.js"></script>-->
+
+		<!-- React and blockchain -->
+
+		<!-- ABIs -->
+		<!-- <script id="thePaintProjectJson" type="application/json" src="./src/abi/ThePaintProject.json"></script> -->
+
+		<script src="https://unpkg.com/react@16/umd/react.development.js" crossorigin>
+		</script>  <script src="https://unpkg.com/react-dom@16/umd/react-dom.development.js" crossorigin></script>
+
+		<script src="./src/blockchain.js"></script>
+
+		<script>
+			const blockchain = new Blockchain();
+			blockchain.componentDidMount();
+		</script>
+
+		<!-- End React and blockchain -->
+		
 		<script src="src/edit-colors.js"></script>
 		<script src="src/manage-storage.js"></script>
 		<script src="src/imgur.js"></script>

@@ -863,7 +863,7 @@ function are_you_sure(action, canceled){
 }
 
 function show_error_message(message, error){
-	const $w = $FormToolWindow().title(localize("Paint")).addClass("dialogue-window squish");
+	const $w = $FormToolWindow().title(localize("The Paint Project")).addClass("dialogue-window squish");
 	$w.$main.text(message);
 	$w.$main.css("max-width", "600px");
 	if(error){
