@@ -80,7 +80,7 @@ function choose_color(initial_color, callback) {
 	if ($edit_colors_window) {
 		$edit_colors_window.close();
 	}
-	const $w = new $FormToolWindow(localize("Edit Colors"));
+	const $w = new $FormToolWindow(localize("Mint a Paint"));
 	$w.addClass("edit-colors-window");
 	$edit_colors_window = $w;
 
@@ -97,6 +97,57 @@ function choose_color(initial_color, callback) {
 		sat_percent = s * 100;
 		lum_percent = l * 100;
 	};
+
+	// Begin hex functions
+
+	const is_hex_value = (val) => {
+		const result = /^#[0-9A-F]{6}$/i.test(val)
+		return result
+	}
+
+	const rgb_to_hex = (r, g, b) => {
+		r = r.toString(16).toUpperCase();
+		g = g.toString(16).toUpperCase();
+		b = b.toString(16).toUpperCase();
+
+		if (r == "255")
+			r = "FF";
+		if (g == "255")
+			g = "FF";
+		if (b == "255")
+			b = "FF";
+	  
+		if (r.length == 1)
+		  r = "0" + r;
+		if (g.length == 1)
+		  g = "0" + g;
+		if (b.length == 1)
+		  b = "0" + b;
+
+		return "#" + r + g + b;
+	  }
+
+	  const hex_to_rgb =(h) => {
+		let r = 0, g = 0, b = 0;
+	  
+		// 3 digits
+		if (h.length == 4) {
+		  r = "0x" + h[1] + h[1];
+		  g = "0x" + h[2] + h[2];
+		  b = "0x" + h[3] + h[3];
+	  
+		// 6 digits
+		} else if (h.length == 7) {
+		  r = "0x" + h[1] + h[2];
+		  g = "0x" + h[3] + h[4];
+		  b = "0x" + h[5] + h[6];
+		}
+		
+		return {r, g, b};
+	  }
+
+	// End hex functions
+
 	const set_color = (color)=> {
 		const [r, g, b] = get_rgba_from_color(color);
 		set_color_from_rgb(r, g, b);
@@ -113,111 +164,113 @@ function choose_color(initial_color, callback) {
 		update_inputs("hslrgb");
 	};
 
-	const make_color_grid = (colors, id)=> {
-		const $color_grid = $(`<div class="color-grid" tabindex="0">`).attr({id});
-		for (const color of colors) {
-			const $swatch = $Swatch(color);
-			$swatch.appendTo($color_grid).addClass("inset-deep");
-			$swatch.attr("tabindex", -1); // can be focused by clicking or calling focus() but not by tabbing
-		}
-		let $local_last_focus = $color_grid.find(".swatch:first-child");
-		const num_colors_per_row = 8;
-		const navigate = (relative_index)=> {
-			const $focused = $color_grid.find(".swatch:focus");
-			if (!$focused.length) { return; }
-			const $swatches = $color_grid.find(".swatch");
-			const from_index = $swatches.toArray().indexOf($focused[0]);
-			if (relative_index === -1 && (from_index % num_colors_per_row) === 0) { return; }
-			if (relative_index === +1 && (from_index % num_colors_per_row) === num_colors_per_row - 1) { return; }
-			const to_index = from_index + relative_index;
-			const $to_focus = $($swatches.toArray()[to_index]);
-			// console.log({from_index, to_index, $focused, $to_focus});
-			if (!$to_focus.length) { return; }
-			$to_focus.focus();
-		};
-		$color_grid.on("keydown", (event)=> {
-			// console.log(event.code);
-			if (event.code === "ArrowRight") { navigate(+1); }
-			if (event.code === "ArrowLeft") { navigate(-1); }
-			if (event.code === "ArrowDown") { navigate(+num_colors_per_row); }
-			if (event.code === "ArrowUp") { navigate(-num_colors_per_row); }
-			if (event.code === "Home") { $color_grid.find(".swatch:first-child").focus(); }
-			if (event.code === "End") { $color_grid.find(".swatch:last-child").focus(); }
-			if (event.code === "Space" || event.code === "Enter") {
-				select($color_grid.find(".swatch:focus"));
-				draw();
-			}
-		});
-		$color_grid.on("pointerdown", (event)=> {
-			const $swatch = $(event.target).closest(".swatch");
-			if ($swatch.length) {
-				select($swatch);
-				draw();
-			}
-		});
-		$color_grid.on("dragstart", (event)=> {
-			event.preventDefault();
-		});
-		$color_grid.on("focusin", (event)=> {
-			if (event.target.closest(".swatch")) {
-				$local_last_focus = $(event.target.closest(".swatch"));
-			} else {
-				if (!$local_last_focus.is(":focus")) { // prevent infinite recursion
-					$local_last_focus.focus();
-				}
-			}
-			// allow shift+tabbing out of the control
-			// otherwise it keeps setting focus back to the color cell,
-			// since the parent grid is previous in the tab order
-			$color_grid.attr("tabindex", -1);
-		});
-		$color_grid.on("focusout", (event)=> {
-			$color_grid.attr("tabindex", 0);
-		});
-		return $color_grid;
-	};
+	// const make_color_grid = (colors, id)=> {
+	// 	const $color_grid = $(`<div class="color-grid" tabindex="0">`).attr({id});
+	// 	for (const color of colors) {
+	// 		const $swatch = $Swatch(color);
+	// 		$swatch.appendTo($color_grid).addClass("inset-deep");
+	// 		$swatch.attr("tabindex", -1); // can be focused by clicking or calling focus() but not by tabbing
+	// 	}
+	// 	let $local_last_focus = $color_grid.find(".swatch:first-child");
+	// 	const num_colors_per_row = 8;
+	// 	const navigate = (relative_index)=> {
+	// 		const $focused = $color_grid.find(".swatch:focus");
+	// 		if (!$focused.length) { return; }
+	// 		const $swatches = $color_grid.find(".swatch");
+	// 		const from_index = $swatches.toArray().indexOf($focused[0]);
+	// 		if (relative_index === -1 && (from_index % num_colors_per_row) === 0) { return; }
+	// 		if (relative_index === +1 && (from_index % num_colors_per_row) === num_colors_per_row - 1) { return; }
+	// 		const to_index = from_index + relative_index;
+	// 		const $to_focus = $($swatches.toArray()[to_index]);
+	// 		// console.log({from_index, to_index, $focused, $to_focus});
+	// 		if (!$to_focus.length) { return; }
+	// 		$to_focus.focus();
+	// 	};
+	// 	$color_grid.on("keydown", (event)=> {
+	// 		// console.log(event.code);
+	// 		if (event.code === "ArrowRight") { navigate(+1); }
+	// 		if (event.code === "ArrowLeft") { navigate(-1); }
+	// 		if (event.code === "ArrowDown") { navigate(+num_colors_per_row); }
+	// 		if (event.code === "ArrowUp") { navigate(-num_colors_per_row); }
+	// 		if (event.code === "Home") { $color_grid.find(".swatch:first-child").focus(); }
+	// 		if (event.code === "End") { $color_grid.find(".swatch:last-child").focus(); }
+	// 		if (event.code === "Space" || event.code === "Enter") {
+	// 			select($color_grid.find(".swatch:focus"));
+	// 			draw();
+	// 		}
+	// 	});
+	// 	$color_grid.on("pointerdown", (event)=> {
+	// 		const $swatch = $(event.target).closest(".swatch");
+	// 		if ($swatch.length) {
+	// 			select($swatch);
+	// 			draw();
+	// 		}
+	// 	});
+	// 	$color_grid.on("dragstart", (event)=> {
+	// 		event.preventDefault();
+	// 	});
+	// 	$color_grid.on("focusin", (event)=> {
+	// 		if (event.target.closest(".swatch")) {
+	// 			$local_last_focus = $(event.target.closest(".swatch"));
+	// 		} else {
+	// 			if (!$local_last_focus.is(":focus")) { // prevent infinite recursion
+	// 				$local_last_focus.focus();
+	// 			}
+	// 		}
+	// 		// allow shift+tabbing out of the control
+	// 		// otherwise it keeps setting focus back to the color cell,
+	// 		// since the parent grid is previous in the tab order
+	// 		$color_grid.attr("tabindex", -1);
+	// 	});
+	// 	$color_grid.on("focusout", (event)=> {
+	// 		$color_grid.attr("tabindex", 0);
+	// 	});
+	// 	return $color_grid;
+	// };
 	const $left_right_split = $(`<div class="left-right-split">`).appendTo($w.$main);
 	const $left = $(`<div class="left-side">`).appendTo($left_right_split);
 	const $right = $(`<div class="right-side">`).appendTo($left_right_split).hide();
-	$left.append(`<label for="basic-colors">${display_hotkey("&Basic colors:")}</label>`);
-	const $basic_colors_grid = make_color_grid(basic_colors, "basic-colors").appendTo($left);
-	$left.append(`<label for="custom-colors">${display_hotkey("&Custom colors:")}</label>`);
-	const custom_colors_dom_order = []; // (wanting) horizontal top to bottom
-	for (let list_index = 0; list_index < custom_colors.length; list_index++) {
-		const row = list_index % 2;
-		const column = Math.floor(list_index / 2);
-		const dom_index = row * 8 + column;
-		custom_colors_dom_order[dom_index] = custom_colors[list_index];
-	}
-	const $custom_colors_grid = make_color_grid(custom_colors_dom_order, "custom-colors").appendTo($left);
-	const custom_colors_swatches_dom_order = $custom_colors_grid.find(".swatch").toArray(); // horizontal top to bottom
-	const custom_colors_swatches_list_order = []; // (wanting) vertical left to right
-	for (let dom_index = 0; dom_index < custom_colors_swatches_dom_order.length; dom_index++) {
-		const row = Math.floor(dom_index / 8);
-		const column = dom_index % 8;
-		const list_index = column * 2 + row;
-		custom_colors_swatches_list_order[list_index] = custom_colors_swatches_dom_order[dom_index];
-		// custom_colors_swatches_list_order[list_index].textContent = list_index; // visualization
-	}
+	$left.append(`<p>${display_hotkey("Use the color picker and slider to choose")}</p>`);
+	$left.append(`<p style="margin-top: -12px;">${display_hotkey("the &Paint you want to mint.")}</p>`);
+	$left.append(`<p style="margin-top: 25px;">${display_hotkey("You can also paste your hex value below:")}</p>`);
+	// const $basic_colors_grid = make_color_grid(basic_colors, "basic-colors").appendTo($left);
+	// $left.append(`<label for="custom-colors">${display_hotkey("&Custom colors:")}</label>`);
+	// const custom_colors_dom_order = []; // (wanting) horizontal top to bottom
+	// for (let list_index = 0; list_index < custom_colors.length; list_index++) {
+	// 	const row = list_index % 2;
+	// 	const column = Math.floor(list_index / 2);
+	// 	const dom_index = row * 8 + column;
+	// 	custom_colors_dom_order[dom_index] = custom_colors[list_index];
+	// }
+	// const $custom_colors_grid = make_color_grid(custom_colors_dom_order, "custom-colors").appendTo($left);
+	// const custom_colors_swatches_dom_order = $custom_colors_grid.find(".swatch").toArray(); // horizontal top to bottom
+	// const custom_colors_swatches_list_order = []; // (wanting) vertical left to right
+	// for (let dom_index = 0; dom_index < custom_colors_swatches_dom_order.length; dom_index++) {
+	// 	const row = Math.floor(dom_index / 8);
+	// 	const column = dom_index % 8;
+	// 	const list_index = column * 2 + row;
+	// 	custom_colors_swatches_list_order[list_index] = custom_colors_swatches_dom_order[dom_index];
+	// 	// custom_colors_swatches_list_order[list_index].textContent = list_index; // visualization
+	// }
+	$right.show();
+	$w.addClass("defining-custom-colors"); // for mobile layout
 
-	const $define_custom_colors_button = $(`<button class="define-custom-colors-button">`)
-	.html(display_hotkey("&Define Custom Colors >>"))
-	.appendTo($left)
-	.on("click", (e)=> {
-		// prevent the form from submitting
-		// @TODO: instead, prevent the form's submit event in $Window.js in os-gui (or don't have a form? idk)
-		e.preventDefault();
+	// const $define_custom_colors_button = $(`<button class="define-custom-colors-button">`)
+	// .html(display_hotkey("&Define Custom Colors >>"))
+	// .appendTo($left)
+	// .on("click", (e)=> {
+	// 	// prevent the form from submitting
+	// 	// @TODO: instead, prevent the form's submit event in $Window.js in os-gui (or don't have a form? idk)
+	// 	e.preventDefault();
 
-		$right.show();
-		$w.addClass("defining-custom-colors"); // for mobile layout
-		$define_custom_colors_button.attr("disabled", "disabled");
-		// assuming small viewport implies mobile implies an onscreen keyboard,
-		// and that you probably don't want to use the keyboard to choose colors
-		if ($w.width() >= 300) {
-			inputs_by_component_letter.h.focus();
-		}
-		maybe_reenable_button_for_mobile_navigation();
-	});
+	// 	$define_custom_colors_button.attr("disabled", "disabled");
+	// 	// assuming small viewport implies mobile implies an onscreen keyboard,
+	// 	// and that you probably don't want to use the keyboard to choose colors
+	// 	if ($w.width() >= 300) {
+	// 		inputs_by_component_letter.h.focus();
+	// 	}
+	// 	maybe_reenable_button_for_mobile_navigation();
+	// });
 
 	// for mobile layout, re-enable button because it's a navigation button in that case, rather than a one-off expando
 	const maybe_reenable_button_for_mobile_navigation = ()=> {
@@ -228,7 +281,7 @@ function choose_color(initial_color, callback) {
 	};
 	$(window).on("resize", maybe_reenable_button_for_mobile_navigation);
 
-	const $color_solid_label = $(`<label for="color-solid-canvas">${display_hotkey("Color|S&olid")}</label>`);
+	const $color_solid_label = $(`<label for="color-solid-canvas">${display_hotkey("Color")}</label>`);
 	$color_solid_label.css({
 		position: "absolute",
 		left: 10,
@@ -365,7 +418,8 @@ function choose_color(initial_color, callback) {
 			$(label).css({
 				position: "absolute",
 				left: 63 + color_model_index * 80,
-				top: 202 + component_index * input_y_spacing,
+				// top: 202 + component_index * input_y_spacing,
+				top: -1000, // hide
 				textAlign: "right",
 				display: "inline-block",
 				width: 40,
@@ -375,7 +429,8 @@ function choose_color(initial_color, callback) {
 			$(input).css({
 				position: "absolute",
 				left: 106 + color_model_index * 80,
-				top: 202 + component_index * input_y_spacing + (component_index > 1), // spacing of rows is uneven by a pixel
+				// top: 202 + component_index * input_y_spacing + (component_index > 1), // spacing of rows is uneven by a pixel
+				top: -1000, // hide
 				width: 21,
 				height: 14,
 			});
@@ -385,16 +440,74 @@ function choose_color(initial_color, callback) {
 		});
 	});
 
+	const hexLabel = document.createElement("label");
+	hexLabel.innerHTML = "Hex Code:";
+
+	const hexInput = document.createElement("input");
+	hexInput.isHex = true;
+	hexInput.type = "text";
+	hexInput.classList.add("inset-deep");
+	$(hexLabel).css({
+		position: "absolute",
+		left: 0,
+		top: 0,
+		textAlign: "right",
+		display: "inline-block",
+		width: 40,
+		height: 20,
+		lineHeight: "20px",
+	});
+	$(hexInput).css({
+		position: "absolute",
+		left: 0,
+		top: 15,
+		width: 50,
+		height: 14,
+	});
+
+	const hexErrorLabel = document.createElement("p");
+	$(hexErrorLabel).css({
+		color: "red",
+		position: "absolute",
+		left: 0,
+		top: 25,
+		textAlign: "right",
+		display: "inline-block",
+		width: 40,
+		height: 20,
+		lineHeight: "20px",
+	})
+	
+	$right.append(hexLabel, hexInput, hexErrorLabel);
+	hexInput.value = "#";
+
 	// listening for input events on input elements using event delegation (looks a little weird)
 	$right.on("input", "input", (event)=> {
 		const input = event.target;
 		const component_letter = input.dataset.componentLetter;
-		if (component_letter) {
+		if (input.isHex) {
+			// Ensure hex starts with '#'
+			if (input.value[0] !== "#") {
+				input.value = "#" + input.value;
+			}
+			const hexColor = input.value;
+			if (!is_hex_value(hexColor)) {
+				hexErrorLabel.innerHTML = "Please input a correct 6 digit hex value";
+			} else {
+				hexErrorLabel.innerHTML = ''
+				let newRgb = hex_to_rgb(input.value);
+				set_color_from_rgb(newRgb.r, newRgb.g, newRgb.b);
+				update_inputs("hsl");
+				update_inputs("rgb");
+				draw();
+			}
+		}
+		else if (component_letter) {
 			// In Windows, it actually only updates if the numerical value changes, not just the text.
 			// That is, you can add leading zeros, and they'll stay, then add them in the other color model
 			// and it won't remove the ones in the fields of the first color model.
 			// This is not important, so I don't know if I'll do that.
-
+			console.log('detected hsl or rgb change, running change.');
 			if (input.value.match(/^\d+$/)) {
 				let n = Number(input.value);
 				if (n < input.dataset.min) {
@@ -417,12 +530,18 @@ function choose_color(initial_color, callback) {
 							break;
 					}
 					update_inputs("rgb");
+					// hexInput.value = rgb_to_hex(
+					// 	inputs_by_component_letter['r'].value,
+					// 	inputs_by_component_letter['g'].value,
+					// 	inputs_by_component_letter['b'].value
+					// );
 				} else {
 					let [r, g, b] = get_rgba_from_color(get_current_color());
 					const rgb = {r, g, b};
 					rgb[component_letter] = n;
 					set_color_from_rgb(rgb.r, rgb.g, rgb.b);
 					update_inputs("hsl");
+					hexInput.value = rgb_to_hex(rgb.r, rgb.g, rgb.b);
 				}
 				draw();
 			} else if (input.value.length) {
@@ -505,6 +624,7 @@ function choose_color(initial_color, callback) {
 				g,
 				b,
 			}[component_letter]);
+			hexInput.value = rgb_to_hex(r, g, b);
 		}
 	};
 
@@ -521,18 +641,22 @@ function choose_color(initial_color, callback) {
 		const color = get_current_color();
 		custom_colors[custom_colors_index] = color;
 		// console.log(custom_colors_swatches_reordered, custom_colors_index, custom_colors_swatches_reordered[custom_colors_index]));
-		update_$swatch($(custom_colors_swatches_list_order[custom_colors_index]), color);
+		// update_$swatch($(custom_colors_swatches_list_order[custom_colors_index]), color);
 		custom_colors_index = (custom_colors_index + 1) % custom_colors.length;
 
 		$w.removeClass("defining-custom-colors"); // for mobile layout
 	});
 
-	$w.$Button(localize("OK"), () => {
-		callback(get_current_color());
+	// $w.$Button(localize("OK"), () => {
+	// 	callback(get_current_color());
+	// 	$w.close();
+	// })[0].focus();
+	$w.$Button(localize("Check availability"), () => {
 		$w.close();
-	})[0].focus();
-	$w.$Button(localize("Cancel"), () => {
-		$w.close();
+	});
+	$w.$Button(localize("Mint"), () => {
+		const colorToMint = hexInput.value;
+		console.log('attempting to mint', colorToMint);
 	});
 
 	$left.append($w.$buttons);
@@ -546,9 +670,9 @@ function choose_color(initial_color, callback) {
 			break;
 		}
 	}
-	custom_colors_index = Math.max(0, custom_colors_swatches_list_order.indexOf(
-		$custom_colors_grid.find(".swatch.selected")[0]
-	));
+	// custom_colors_index = Math.max(0, custom_colors_swatches_list_order.indexOf(
+	// 	$custom_colors_grid.find(".swatch.selected")[0]
+	// ));
 	
 	set_color(initial_color);
 	update_inputs("hslrgb");

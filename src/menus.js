@@ -603,9 +603,9 @@ window.menus = {
 			description: localize("Makes the current selection either opaque or transparent."),
 		}
 	],
-	[localize("&Colors")]: [
+	["&Mint"]: [
 		{
-			item: `${localize("&Edit Colors")}...`,
+			item: `${localize("Mint a &Paint")}...`,
 			speech_recognition: [
 				"edit colors", "edit color", "edit custom colors", "edit custom color",
 				"pick custom color", "choose custom color", "pick a custom color", "choose a custom color",

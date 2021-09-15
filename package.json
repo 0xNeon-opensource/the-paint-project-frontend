@@ -55,6 +55,7 @@
   "dependencies": {
     "electron-is-dev": "^1.1.0",
     "electron-squirrel-startup": "^1.0.0",
+    "ethers": "^5.4.6",
     "glob": "^7.1.6",
     "rtlcss": "^3.0.0",
     "wallpaper": "4.4.1"
