@@ -1072,12 +1072,19 @@ function show_news(){
 	$news_window.center(); // @XXX - but it helps tho
 }
 
-function show_all_colors_window(){
+async function show_all_colors_window(){
+	await blockchain.updateColorList();
 	if($all_colors_window){
 		$all_colors_window.close();
 	}
 	$all_colors_window = $ToolWindow().title(allColorsTitle);
 	$all_colors_window.addClass("news-window squish");
+	$all_colors_window.css(({
+		top: 100,
+		width: 900,
+		// height
+	}));
+	// width 900px, top 100px
 
 
 	// const $latest_entries = $latest_news.find(".news-entry");

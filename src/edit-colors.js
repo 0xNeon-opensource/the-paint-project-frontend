@@ -26,6 +26,85 @@
 //     - the top left of (what corresponds to) the nearest parent position:fixed/absolute/relative
 //   - subtract the origin from the target
 
+	// CREATING COLOR FORM ELEMENTS
+	const walletErrorMsg = document.createElement("p");
+	walletErrorMsg.innerText = "Please connect your wallet."
+	$(walletErrorMsg).css({
+		color: "red",
+		marginLeft: 45,
+	});
+
+	const genericErrorMsg = document.createElement("p");
+	genericErrorMsg.innerText = "An error has occurred."
+	$(genericErrorMsg).css({
+		color: "red",
+		marginLeft: 56,
+	});
+
+	const colorNotAvailContainer = document.createElement("div");
+	const colorNotAvailMsg1 = document.createElement("p");
+	colorNotAvailMsg1.innerText = "This color is not available."
+	$(colorNotAvailMsg1).css({
+		color: "red",
+		marginLeft: 47
+	});
+	const colorNotAvailMsg2 = document.createElement("p");
+	colorNotAvailMsg2.innerText = "Try a different one!"
+	$(colorNotAvailMsg2).css({
+		color: "red",
+		marginLeft: 60
+	});
+	$(colorNotAvailContainer).append(colorNotAvailMsg1, colorNotAvailMsg2)
+
+	let mintWaitingMsg = document.createElement("p");
+	mintWaitingMsg.innerText = "Minting, please wait...";
+	$(mintWaitingMsg).css({
+		marginLeft: 60,
+	});
+
+	let mintSuccessMsg = document.createElement("p");
+	mintSuccessMsg.innerText = "Mint successful. Congratulations!";
+	$(mintSuccessMsg).css({
+		color: "green",
+		marginLeft: 30,
+		marginTop: 5,
+	});
+
+	let viewPaintMsg = document.createElement("p");
+	viewPaintMsg.innerText = "View your new Paint in Wallet > My Paints";
+	$(viewPaintMsg).css({
+		color: "green",
+		marginTop: -8
+	});
+
+	let mintButton = document.createElement("button");
+	mintButton.innerText = "Mint";
+	$(mintButton).css({
+		width: 50,
+		marginLeft: 87,
+	})
+
+	let availableMgs1 = document.createElement("p");
+	availableMgs1.innerText = "This color is available.";
+	$(availableMgs1).css({
+		color: "green",
+		marginLeft: 57,
+		marginTop: 5,
+});
+
+	let availableMgs2 = document.createElement("p");
+	availableMgs2.innerText = "Are you ready to make history?";
+	$(availableMgs2).css({
+		color: "green",
+		marginLeft: 37,
+});
+
+	let loadingElispes = document.createElement("p");
+	loadingElispes.innerText = "...";
+	$(loadingElispes).css({marginLeft: 105});
+
+
+
 let $edit_colors_window;
 
 let dev_edit_colors = false;
@@ -230,9 +309,9 @@ function choose_color(initial_color, callback) {
 	const $left_right_split = $(`<div class="left-right-split">`).appendTo($w.$main);
 	const $left = $(`<div class="left-side">`).appendTo($left_right_split);
 	const $right = $(`<div class="right-side">`).appendTo($left_right_split).hide();
-	$left.append(`<p>${display_hotkey("Use the color picker and slider to choose")}</p>`);
+	$left.append(`<p>Use the color picker <strong>and slider</strong> to choose</p>`);
 	$left.append(`<p style="margin-top: -12px;">${display_hotkey("the &Paint you want to mint.")}</p>`);
-	$left.append(`<p style="margin-top: 25px;">${display_hotkey("You can also paste your hex value below:")}</p>`);
+	$left.append(`<p style="margin-top: 15px;">${display_hotkey("You can also paste your hex value below:")}</p>`);
 	// const $basic_colors_grid = make_color_grid(basic_colors, "basic-colors").appendTo($left);
 	// $left.append(`<label for="custom-colors">${display_hotkey("&Custom colors:")}</label>`);
 	// const custom_colors_dom_order = []; // (wanting) horizontal top to bottom
@@ -281,16 +360,16 @@ function choose_color(initial_color, callback) {
 	};
 	$(window).on("resize", maybe_reenable_button_for_mobile_navigation);
 
-	const $color_solid_label = $(`<label for="color-solid-canvas">${display_hotkey("Color")}</label>`);
-	$color_solid_label.css({
-		position: "absolute",
-		left: 10,
-		top: 244,
-	});
+	// const $color_solid_label = $(`<label for="color-solid-canvas">${display_hotkey("Color")}</label>`);
+	// $color_solid_label.css({
+	// 	position: "absolute",
+	// 	left: 10,
+	// 	top: 255,
+	// });
 
 	const rainbow_canvas = make_canvas(175, 187);
 	const luminosity_canvas = make_canvas(10, 187);
-	const result_canvas = make_canvas(58, 40);
+	const result_canvas = make_canvas(175, 60);
 	const lum_arrow_canvas = make_canvas(5, 9);
 
 	$(result_canvas).css({
@@ -440,7 +519,10 @@ function choose_color(initial_color, callback) {
 		});
 	});
 
-	const hexLabel = document.createElement("label");
+	const hexLabelInputContainer = document.createElement("div");
+	$(hexLabelInputContainer).css({paddingLeft: 49});
+
+	const hexLabel = document.createElement("p");
 	hexLabel.innerHTML = "Hex Code:";
 
 	const hexInput = document.createElement("input");
@@ -448,7 +530,6 @@ function choose_color(initial_color, callback) {
 	hexInput.type = "text";
 	hexInput.classList.add("inset-deep");
 	$(hexLabel).css({
-		position: "absolute",
 		left: 0,
 		top: 0,
 		textAlign: "right",
@@ -458,30 +539,99 @@ function choose_color(initial_color, callback) {
 		lineHeight: "20px",
 	});
 	$(hexInput).css({
-		position: "absolute",
-		left: 0,
-		top: 15,
-		width: 50,
+		left: 20,
+		top: 0,
+		width: 60,
 		height: 14,
 	});
 
 	const hexErrorLabel = document.createElement("p");
 	$(hexErrorLabel).css({
 		color: "red",
-		position: "absolute",
-		left: 0,
-		top: 25,
-		textAlign: "right",
-		display: "inline-block",
-		width: 40,
-		height: 20,
-		lineHeight: "20px",
+		height: 10,
+		marginTop: -7,
+		marginLeft: 13,
 	})
+	hexLabelInputContainer.append(hexLabel, hexInput);
+	$left.append(hexLabelInputContainer, hexErrorLabel);
 	
-	$right.append(hexLabel, hexInput, hexErrorLabel);
 	hexInput.value = "#";
 
+	// Initialize mint form buttons and text
+
+
 	// listening for input events on input elements using event delegation (looks a little weird)
+	$left.on("input", "input", (event)=> {
+		const input = event.target;
+		const component_letter = input.dataset.componentLetter;
+		if (input.isHex) {
+			hexErrorLabel.innerHTML = '';
+			resetColorForm();
+			// Ensure hex starts with '#'
+			if (input.value[0] !== "#") {
+				input.value = "#" + input.value;
+			}
+			const hexColor = input.value;
+			if (!is_hex_value(hexColor)) {
+				hexErrorLabel.innerHTML = "Please input a correct 6 digit hex value";
+			} else {
+				hexErrorLabel.innerHTML = ''
+				let newRgb = hex_to_rgb(input.value);
+				set_color_from_rgb(newRgb.r, newRgb.g, newRgb.b);
+				update_inputs("hsl");
+				update_inputs("rgb");
+				draw();
+			}
+		}
+		else if (component_letter) {
+			// In Windows, it actually only updates if the numerical value changes, not just the text.
+			// That is, you can add leading zeros, and they'll stay, then add them in the other color model
+			// and it won't remove the ones in the fields of the first color model.
+			// This is not important, so I don't know if I'll do that.
+			console.log('detected hsl or rgb change, running change.');
+			if (input.value.match(/^\d+$/)) {
+				let n = Number(input.value);
+				if (n < input.dataset.min) {
+					n = input.dataset.min;
+					input.value = n;
+				} else if (n > input.dataset.max) {
+					n = input.dataset.max;
+					input.value = n;
+				}
+				if ("hsl".indexOf(component_letter) > -1) {
+					switch (component_letter) {
+						case "h":
+							hue_degrees = n;
+							break;
+						case "s":
+							sat_percent = n;
+							break;
+						case "l":
+							lum_percent = n;
+							break;
+					}
+					update_inputs("rgb");
+					// hexInput.value = rgb_to_hex(
+					// 	inputs_by_component_letter['r'].value,
+					// 	inputs_by_component_letter['g'].value,
+					// 	inputs_by_component_letter['b'].value
+					// );
+				} else {
+					let [r, g, b] = get_rgba_from_color(get_current_color());
+					const rgb = {r, g, b};
+					rgb[component_letter] = n;
+					set_color_from_rgb(rgb.r, rgb.g, rgb.b);
+					update_inputs("hsl");
+					hexInput.value = rgb_to_hex(rgb.r, rgb.g, rgb.b);
+				}
+				draw();
+			} else if (input.value.length) {
+				update_inputs(component_letter);
+				input.select();
+			}
+		}
+	});
+
 	$right.on("input", "input", (event)=> {
 		const input = event.target;
 		const component_letter = input.dataset.componentLetter;
@@ -612,7 +762,10 @@ function choose_color(initial_color, callback) {
 		event.stopPropagation();
 	});
 
+
 	const update_inputs = (components)=> {
+		hexErrorLabel.innerHTML = '';
+		resetColorForm();
 		for (const component_letter of components) {
 			const input = inputs_by_component_letter[component_letter];
 			const [r, g, b] = get_rgba_from_color(get_current_color());
@@ -628,38 +781,60 @@ function choose_color(initial_color, callback) {
 		}
 	};
 
-	$right.append(rainbow_canvas, luminosity_canvas, result_canvas, $color_solid_label, lum_arrow_canvas);
+	// $right.append(rainbow_canvas, luminosity_canvas, result_canvas, $color_solid_label, lum_arrow_canvas);
+	$right.append(rainbow_canvas, luminosity_canvas, result_canvas, lum_arrow_canvas);
 
-	const $add_to_custom_colors_button = $(`<button class="add-to-custom-colors-button">`)
-	.html(display_hotkey("&Add To Custom Colors"))
-	.appendTo($right)
-	.on("click", (event)=> {
-		// prevent the form from submitting
-		// @TODO: instead, prevent the form's submit event in $Window.js in os-gui (or don't have a form? idk)
-		event.preventDefault();
-
-		const color = get_current_color();
-		custom_colors[custom_colors_index] = color;
-		// console.log(custom_colors_swatches_reordered, custom_colors_index, custom_colors_swatches_reordered[custom_colors_index]));
-		// update_$swatch($(custom_colors_swatches_list_order[custom_colors_index]), color);
-		custom_colors_index = (custom_colors_index + 1) % custom_colors.length;
-
-		$w.removeClass("defining-custom-colors"); // for mobile layout
-	});
-
-	// $w.$Button(localize("OK"), () => {
-	// 	callback(get_current_color());
-	// 	$w.close();
-	// })[0].focus();
 	$w.$Button(localize("Check availability"), () => {
-		$w.close();
+		walletErrorMsg.remove();
+		genericErrorMsg.remove();
+		$left.append(loadingElispes);
+		if (!hexErrorLabel.innerText) {
+			blockchain.updateColorList().then(function () {
+				loadingElispes.remove();
+				console.log('updated color list');
+				if (blockchain.state.colors.includes(hexInput.value)) {
+					$left.append(colorNotAvailContainer);
+				} else {
+					// $left.append(`<p style="color: green;">This color is available.</p>`);
+					// $left.append(`<p style="color: green;">Are you ready to make history?</p>`);
+					$left.append(availableMgs1);
+					$left.append(availableMgs2);
+					mintButton.onclick = function(event) {
+						event.preventDefault();
+						genericErrorMsg.remove();
+						walletErrorMsg.remove();
+						const colorToMint = hexInput.value;
+						$left.append(mintWaitingMsg);
+						blockchain.mint(colorToMint).then(function(res) {
+							mintWaitingMsg.remove();
+							blockchain.updateColorList();
+							console.log(`res from edit colors`, res);
+							$left.append(mintSuccessMsg);
+							$left.append(viewPaintMsg);
+						}).catch((mintError) => {
+							console.log(`Error while trying to mint:`, mintError)
+							mintWaitingMsg.remove();
+							$left.append(walletErrorMsg);
+						})
+					}
+					$left.append(mintButton);
+				}
+			}).catch((availabilityError) => {
+				loadingElispes.remove();
+				console.log(`Error while checking color availability:`, availabilityError);
+				$left.append(walletErrorMsg);
+				if (availabilityError.toString().includes("unknown account")) {
+				} else {
+					$left.append(genericErrorMsg);
+				}
+			})
+		}
+				
 	});
-	$w.$Button(localize("Mint"), () => {
-		const colorToMint = hexInput.value;
-		blockchain.mint(colorToMint);
-	});
+	console.log(`$w.$buttons`, $w.$buttons);
 
 	$left.append($w.$buttons);
+	$('button:contains("Check availability")').css({left: 50});
 
 	// initially select the first color cell that matches the swatch to edit, if any
 	// (first in the basic colors, then in the custom colors otherwise - implicitly)
@@ -678,4 +853,13 @@ function choose_color(initial_color, callback) {
 	update_inputs("hslrgb");
 
 	$w.center();
+}
+
+function resetColorForm() {
+	mintButton.remove();
+	availableMgs1.remove();
+	availableMgs2.remove();
+	colorNotAvailContainer.remove();
+	genericErrorMsg.remove();
+	walletErrorMsg.remove();
 }

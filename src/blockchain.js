@@ -31349,41 +31349,54 @@ class Blockchain extends React.Component {
   async componentDidMount() {
     await this.loadWeb3();
     await this.loadBlockchainData();
+    // this.listenForChangesInNetworkAndWallet()
   }
 
   async loadWeb3() {
     const provider = new ethers.providers.Web3Provider(window.ethereum);
     // Because this whole thing is really hacky, set state incorrectly:
     this.state.provider = provider;
+    console.log(`provider`, provider)
+    console.log(`this.state.provider.getSigner()`, this.state.provider.getSigner());
   }
 
   async loadBlockchainData() {
     const networkData = thePaintProject.networks[window.ethereum.networkVersion];
     if (networkData) {
-      const paintProjectContract = new ethers.Contract(
-        networkData.address,
-        thePaintProject.abi,
-        this.state.provider.getSigner()
-      )
-      this.state.paintProjectContract = paintProjectContract;
-      console.log('this.state.paintProjectContract :>> ', this.state.paintProjectContract);
+      const signer = this.state.provider.getSigner();
+      console.log(`signer`, signer);
+      let walletConnected;
+      try {
+        await signer.getAddress();
+        walletConnected = true;
+      } catch (e) {
+        walletConnected = false;
+      }
+      console.log(`walletConnected`, walletConnected)
+      if (walletConnected) {
+        this.updateContractWithSignerInfo();
+        await this.showWalletInfo();
+      } else {
+        this.updateContractWithNoWallet(networkData);
+      }
 
-      await this.showWalletInfoIfConnected();
 
-      await this.updateColorList(paintProjectContract);
+      await this.updateColorList();
 
     } else {
       show_error_message('We have detected you switched networks. Please switch to the Ethereum Mainnet.')
     }
   }
 
-  async updateColorList(paintProjectContract) {
-    const totalSupply = await paintProjectContract.totalSupply().then(bigNum => bigNum.toNumber());
+  async updateColorList() {
+    console.log('attempting to get total supply...');
+    const totalSupply = await this.state.paintProjectContract.totalSupply().then(bigNum => bigNum.toNumber());
     this.state.totalSupply = totalSupply;
     console.log('this.state.totalSupply :>> ', this.state.totalSupply);
 
+    this.state.colors = [];
     for (let i = 0; i < totalSupply; i++) {
-      let c = await paintProjectContract.colors(i);
+      let c = await this.state.paintProjectContract.colors(i);
       this.state.colors.push(c);
     }
     console.log('this.state.colors :>> ', this.state.colors);
@@ -31391,10 +31404,44 @@ class Blockchain extends React.Component {
 
   async connectWallet() {
     await this.state.provider.send("eth_requestAccounts", []);
-    await this.showWalletInfoIfConnected();
+    this.updateContractWithSignerInfo();
+    await this.showWalletInfo();
+    resetColorForm();
+  }
+  // async listenForChangesInNetworkAndWallet() {
+  //   while (true) {
+  //     setTimeout(() => {
+  //       const networkData = thePaintProject.networks[window.ethereum.networkVersion];
+  //       console.log(`networkData`, networkData);
+  //     }, 5000);
+  //   }
+  //   // if not on mainnet, show error
+  // }
+
+  updateContractWithSignerInfo() {
+    const networkData = thePaintProject.networks[window.ethereum.networkVersion];
+    console.log('updateContractWithSignerInfo()');
+    const paintProjectContract = new ethers.Contract(
+      networkData.address,
+      thePaintProject.abi,
+      this.state.provider.getSigner()
+    );
+    this.state.paintProjectContract = paintProjectContract;
+    console.log('this.state.paintProjectContract :>> ', this.state.paintProjectContract);
   }
 
-  async showWalletInfoIfConnected() {
+  updateContractWithNoWallet(networkData) {
+    console.log('updateContractWithNoWallet');
+    const paintProjectContract = new ethers.Contract(
+      networkData.address,
+      thePaintProject.abi,
+      this.state.provider
+    );
+    this.state.paintProjectContract = paintProjectContract;
+    console.log('this.state.paintProjectContract :>> ', this.state.paintProjectContract);
+  }
+
+  async showWalletInfo() {
     const signer = this.state.provider.getSigner();
     const account = await signer.getAddress();
     this.state.account = account;
@@ -31402,14 +31449,11 @@ class Blockchain extends React.Component {
   }
 
   async mint(color) {
+    color = color.toUpperCase();
     console.log('blockchain minting color:', color);
     const result = await this.state.paintProjectContract.mint(color)
     console.log('result :>> ', result);
-    result.wait().then((res) => {
-      console.log('res :>> ', res);
-      this.state.colors.push(color);
-    })
-
+    return await result.wait();
   }
 
 }

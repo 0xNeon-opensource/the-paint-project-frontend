@@ -698,7 +698,7 @@ window.menus = {
 		},
 		MENU_DIVIDER,
 		{
-			item: localize("Your &Paints"),
+			item: localize("My &Paints"),
 			speech_recognition: [
 				"Your owned paints",
 			],
