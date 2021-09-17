@@ -98,7 +98,7 @@
 });
 
 	let loadingElispes = document.createElement("p");
-	loadingElispes.innerText = "querying the blockchain";
+	loadingElispes.innerText = "Querying the blockchain";
 	$(loadingElispes).addClass('rainbow-check-avail-loading rainbow_text_animated');
 
 
@@ -783,8 +783,7 @@ function choose_color(initial_color, callback) {
 	$right.append(rainbow_canvas, luminosity_canvas, result_canvas, lum_arrow_canvas);
 
 	$w.$Button(localize("Check availability"), () => {
-		walletErrorMsg.remove();
-		genericErrorMsg.remove();
+		resetColorForm();
 		$left.append(loadingElispes);
 		if (!hexErrorLabel.innerText) {
 			blockchain.updateColorList().then(function () {
@@ -801,6 +800,8 @@ function choose_color(initial_color, callback) {
 						event.preventDefault();
 						genericErrorMsg.remove();
 						walletErrorMsg.remove();
+						mintSuccessMsg.remove();
+						viewPaintMsg.remove();
 						const colorToMint = hexInput.value;
 						$left.append(mintWaitingMsg);
 						blockchain.mint(colorToMint).then(function(res) {

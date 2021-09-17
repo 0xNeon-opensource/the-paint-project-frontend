@@ -1231,7 +1231,26 @@ function createColorPageForPageNumber(currentPageList, mainContainer, numColorsP
 			backgroundColor: color,
 			marginLeft: 10,
 			marginTop: 10,
+			cursor: "pointer",
 		});
+		colorDot.onclick = function () {
+			document.body.style.cursor='wait';
+			console.log(`color`, color);
+			// blockchain.state.paintProjectContract.colorToImageUri(color).then((imageUri) => {
+			blockchain.state.paintProjectContract.getMetadataForColor(color).then((metadata) => {
+				document.body.style.cursor='default';
+				console.log(`metadata`, metadata)
+				window.open(metadata);
+				// console.log(`imageUri`, imageUri);
+				// window.open(imageUri);
+				// var string = doc.output(imageUri);
+				// var iframe = "<iframe width='100%' height='100%' src='" + imageUri + "'></iframe>"
+				// var x = window.open();
+				// x.document.open();
+				// x.document.write(iframe);
+				// x.document.close();
+			});
+		}
 
 		let colorValue = document.createElement("p");
 		colorValue.innerHTML = color;
