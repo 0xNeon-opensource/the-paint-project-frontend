@@ -128,10 +128,16 @@ function $ToolWindow($component){
 	};
 	
 	$w.center = () => {
-		$w.css({
-			left: (innerWidth - $w.outerWidth()) / 2,
-			top: (innerHeight - $w.outerHeight()) / 2,
-		});
+		if($w.isAllColorsWindow){
+			$w.css({
+				left: (innerWidth - $w.outerWidth()) / 2,
+			});
+		} else {
+			$w.css({
+				left: (innerWidth - $w.outerWidth()) / 2,
+				top: (innerHeight - $w.outerHeight()) / 2,
+			});
+		}
 		$w.applyBounds();
 	};
 	

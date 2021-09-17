@@ -35,10 +35,10 @@
 	});
 
 	const genericErrorMsg = document.createElement("p");
-	genericErrorMsg.innerText = "An error has occurred."
+	genericErrorMsg.innerText = "Error. Maybe someone has just minted this color?"
 	$(genericErrorMsg).css({
 		color: "red",
-		marginLeft: 56,
+		marginLeft: 5,
 	});
 
 	const colorNotAvailContainer = document.createElement("div");
@@ -57,10 +57,8 @@
 	$(colorNotAvailContainer).append(colorNotAvailMsg1, colorNotAvailMsg2)
 
 	let mintWaitingMsg = document.createElement("p");
-	mintWaitingMsg.innerText = "Minting, please wait...";
-	$(mintWaitingMsg).css({
-		marginLeft: 60,
-	});
+	mintWaitingMsg.innerText = "Minting, just sit tight...";
+	$(mintWaitingMsg).addClass('rainbow-mint-loading rainbow_text_animated');
 
 	let mintSuccessMsg = document.createElement("p");
 	mintSuccessMsg.innerText = "Mint successful. Congratulations!";
@@ -100,8 +98,8 @@
 });
 
 	let loadingElispes = document.createElement("p");
-	loadingElispes.innerText = "...";
-	$(loadingElispes).css({marginLeft: 105});
+	loadingElispes.innerText = "querying the blockchain";
+	$(loadingElispes).addClass('rainbow-check-avail-loading rainbow_text_animated');
 
 
 
@@ -814,7 +812,11 @@ function choose_color(initial_color, callback) {
 						}).catch((mintError) => {
 							console.log(`Error while trying to mint:`, mintError)
 							mintWaitingMsg.remove();
-							$left.append(walletErrorMsg);
+							if (mintError.toString().includes("transaction requires a signer")) {
+								$left.append(walletErrorMsg);
+							} else {
+								$left.append(genericErrorMsg);
+							}
 						})
 					}
 					$left.append(mintButton);
@@ -822,11 +824,7 @@ function choose_color(initial_color, callback) {
 			}).catch((availabilityError) => {
 				loadingElispes.remove();
 				console.log(`Error while checking color availability:`, availabilityError);
-				$left.append(walletErrorMsg);
-				if (availabilityError.toString().includes("unknown account")) {
-				} else {
-					$left.append(genericErrorMsg);
-				}
+				$left.append(genericErrorMsg);
 			})
 		}
 				
@@ -862,4 +860,6 @@ function resetColorForm() {
 	colorNotAvailContainer.remove();
 	genericErrorMsg.remove();
 	walletErrorMsg.remove();
+	mintSuccessMsg.remove();
+	viewPaintMsg.remove();
 }

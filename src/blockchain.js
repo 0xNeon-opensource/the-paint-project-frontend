@@ -31380,8 +31380,7 @@ class Blockchain extends React.Component {
         this.updateContractWithNoWallet(networkData);
       }
 
-
-      await this.updateColorList();
+      // await this.updateColorList();
 
     } else {
       show_error_message('We have detected you switched networks. Please switch to the Ethereum Mainnet.')

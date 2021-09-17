@@ -1073,33 +1073,38 @@ function show_news(){
 }
 
 async function show_all_colors_window(){
-	await blockchain.updateColorList();
 	if($all_colors_window){
+		const allColorsContainer = document.getElementById("allColorsContainer");
+		if (!!allColorsContainer) {
+			allColorsContainer.remove();
+		}
 		$all_colors_window.close();
 	}
 	$all_colors_window = $ToolWindow().title(allColorsTitle);
-	$all_colors_window.addClass("news-window squish");
+	$all_colors_window.addClass("squish");
 	$all_colors_window.css(({
 		top: 100,
-		width: 900,
-		// height
+		width: 785,
 	}));
-	// width 900px, top 100px
-
-
-	// const $latest_entries = $latest_news.find(".news-entry");
-	// const latest_entry = $latest_entries[$latest_entries.length - 1];
-	// window.console && console.log("LATEST MEWS:", $latest_news);
-	// window.console && console.log("LATEST ENTRY:", latest_entry);
-
-	// const $all_colors_content = $latest_news.find("style");
-	// $all_colors_content.find("style").remove();
-	// $all_colors_content.append($all_colors_content); // in case $this_version_news is $latest_news
+	$all_colors_window.css(("cssText", "top: 100px !important;"));
 
 	$all_colors_window.$content.append($all_colors_content.removeAttr("hidden"));
 
 	$all_colors_window.center();
 	$all_colors_window.center(); // @XXX - but it helps tho
+
+
+	const loadingText = document.createElement("p");
+	loadingText.innerText = "Querying the blockchain...";
+	$(loadingText).addClass('rainbow-color-window-loading rainbow_text_animated');
+	
+	const allColorsContainer = document.getElementById("blockchainColorsDiv");
+	$(allColorsContainer).append(loadingText);
+
+	await blockchain.updateColorList();
+
+	$(loadingText).remove();
+
 
 	const colorContainerHeight = 75;
 	const colorContainerWidth = 75;
@@ -1109,12 +1114,88 @@ async function show_all_colors_window(){
 
 	const numColorsPerRow = 10;
 	const maxNumRowsPerPage = 5;
+
+	// Create pages
+	const numColorsPerPage = numColorsPerRow * maxNumRowsPerPage;
+	const numPages = Math.ceil(blockchain.state.colors.length / numColorsPerPage);
+	const pages = fillPagesWithColors(numPages, numColorsPerPage);
+
+	createPageLinks(numPages, mainContainer, pages, numColorsPerRow, maxNumRowsPerPage, colorContainerHeight, colorContainerWidth);
+	
+	setCurrentPage(1, mainContainer, pages, numColorsPerRow, maxNumRowsPerPage, colorContainerHeight, colorContainerWidth);
+}
+
+function createPageLinks(numPages, mainContainer, pages, numColorsPerRow, maxNumRowsPerPage, colorContainerHeight, colorContainerWidth) {
+	const pageNumberContainer = document.createElement("div");
+	$(pageNumberContainer).css({width: 760})
+	pageNumberContainer.append(document.createElement("span").innerText = "Pages: ");
+	for (let i = 1; i <= numPages; i++) {
+		let pageNumLink = document.createElement("a");
+		$(pageNumLink).attr('id', "page-" + i)
+		$(pageNumLink).css({
+			cursor: "pointer",
+			textDecoration: "underline",
+		});
+		pageNumLink.innerText = i;
+		pageNumLink.onclick = function (event) {
+			setCurrentPage(i, mainContainer, pages, numColorsPerRow, maxNumRowsPerPage, colorContainerHeight, colorContainerWidth)
+		};
+		pageNumberContainer.append(pageNumLink);
+		if (i !== numPages) {
+			pageNumberContainer.append(document.createElement("span").innerText = ", ");
+		}
+	}
+	const allColorsContainer = document.getElementById("blockchainColorsDiv");
+	$(allColorsContainer).append(pageNumberContainer);
+}
+
+function setCurrentPage(pageNumber, mainContainer, pages, numColorsPerRow, maxNumRowsPerPage, colorContainerHeight, colorContainerWidth) {
+	createColorPageForPageNumber(pages[pageNumber - 1], mainContainer, numColorsPerRow, maxNumRowsPerPage, colorContainerHeight, colorContainerWidth);
+	// reset the styling of all page numbers
+	$('*[id*=page-]:visible').each(function() {
+		$(this).css({
+			fontWeight: "normal",
+			textDecoration: "underline",
+		});
+	});
+	// update the styling for current page number
+	let pageNumElement = $('#page-' + pageNumber)[0]
+	$(pageNumElement).css({
+		fontWeight: "bold",
+		textDecoration: "none",
+	});
+}
+
+function fillPagesWithColors(numPages, numColorsPerPage) {
+	let pages = []
+	for (let i = 0; i < numPages; i++) {
+		let currentPage = [];
+		for (let j = 0; j < numColorsPerPage; j++) {
+			// add colors keeping track of where we are in the pages
+			let c = blockchain.state.colors[pages.length * 50 + j];
+			if (!c) {
+				break
+			}
+			currentPage.push(c)
+		}
+		pages.push(currentPage);
+	}
+	return pages;
+}
+
+function createColorPageForPageNumber(currentPageList, mainContainer, numColorsPerRow, maxNumRowsPerPage, colorContainerHeight, colorContainerWidth) {
+	const allColorsContainer = document.getElementById("allColorsContainer");
+	if (!!allColorsContainer) {
+		$(allColorsContainer).empty();
+		allColorsContainer.remove();
+	}
+
 	const wiggleRoom = colorContainerWidth - 10;
 	const mainContainerWidth = calculateMainContainerWidth(
-		blockchain.state.colors.length, numColorsPerRow, colorContainerWidth, wiggleRoom
+		currentPageList.length, numColorsPerRow, colorContainerWidth, wiggleRoom
 	);
 	const mainContainerHeight = calculateMainContainerHeight(
-		blockchain.state.colors.length,
+		currentPageList.length,
 		numColorsPerRow,
 		maxNumRowsPerPage,
 		colorContainerHeight,
@@ -1124,19 +1205,19 @@ async function show_all_colors_window(){
 		height: mainContainerHeight,
 		width: mainContainerWidth,
 		display: "inline-block",
-		backgroundColor: "red",
-		borderStyle: "solid",
+		// backgroundColor: "red",
+		// borderStyle: "solid",
 	});
 	document.getElementById("blockchainColorsDiv").appendChild(mainContainer);
 
-	blockchain.state.colors.forEach(color => {
+	currentPageList.forEach(color => {
 		let colorContainer = document.createElement("div");
 		$(colorContainer).css({
 			height: colorContainerHeight,
 			width: colorContainerWidth,
 			display: "inline-block",
-			backgroundColor: "gray",
-			borderStyle: "solid",
+			// backgroundColor: "gray",
+			// borderStyle: "solid",
 		});
 
 		let colorDot = document.createElement("div");
@@ -1154,9 +1235,10 @@ async function show_all_colors_window(){
 
 		let colorValue = document.createElement("p");
 		colorValue.innerHTML = color;
-		$(colorDot).css({
+		$(colorValue).css({
 			display: "inline-block",
-			// marginLeft: 25,
+			fontSize: "small",
+			marginLeft: 7,
 			// marginTop: 25,
 		});
 

@@ -714,7 +714,7 @@ window.menus = {
 				"Colors on the Blockchain",
 			],
 			action: ()=> { show_all_colors_window(); },
-			description: localize("Displays Help for the current task or command."),
+			description: localize("Show the colors minted on the blockchain."),
 		},
 	],
 	[localize("&Help")]: [
