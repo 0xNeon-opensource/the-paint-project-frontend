@@ -690,11 +690,10 @@ window.menus = {
 		{
 			item: localize("&Connect wallet"),
 			speech_recognition: [
-				"help topics", "help me", "show help", "help", "show help window", "show help topics", "open help",
-				"help viewer", "show help viewer", "open help viewer",
+				"Connect wallet", "wallet",
 			],
 			action: ()=> {blockchain.connectWallet(); },
-			description: localize("Displays Help for the current task or command."),
+			description: localize("Connect wallet."),
 		},
 		MENU_DIVIDER,
 		{
@@ -703,7 +702,7 @@ window.menus = {
 				"Your owned paints",
 			],
 			action: ()=> { show_my_colors_window(); },
-			description: localize("Displays information about this application."),
+			description: localize("Shows the colors on the blockchain that you own."),
 			//description: localize("Displays program information, version number, and copyright."),
 		}
 	],

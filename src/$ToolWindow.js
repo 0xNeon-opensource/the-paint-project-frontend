@@ -19,6 +19,9 @@ function $ToolWindow($component){
 		if ($w.isAllColorsWindow) {
 			document.getElementById("allColorsContainer").remove();
 		}
+		if ($w.isMyColorsWindow) {
+			document.getElementById("myColorsContainer").remove();
+		}
 		$w.close();
 	});
 	$w.$x.on("mousedown selectstart", e => {
@@ -128,9 +131,10 @@ function $ToolWindow($component){
 	};
 	
 	$w.center = () => {
-		if($w.isAllColorsWindow){
+		if($w.isAllColorsWindow || $w.isMyColorsWindow){
 			$w.css({
 				left: (innerWidth - $w.outerWidth()) / 2,
+				top: 30,
 			});
 		} else {
 			$w.css({
@@ -197,6 +201,9 @@ function $ToolWindow($component){
 			$w.$title.text(title);
 			if (!!allColorsTitle && title == allColorsTitle) {
 				$w.isAllColorsWindow = true;
+			}
+			if (!!myColorsTitle && title == myColorsTitle) {
+				$w.isMyColorsWindow = true;
 			}
 			return $w;
 		}else{

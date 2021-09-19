@@ -1074,59 +1074,72 @@ function show_news(){
 	$news_window.center(); // @XXX - but it helps tho
 }
 
-// async function show_my_colors_window(){
-// 	console.log('showing my colors');
-// 	if($all_colors_window){
-// 		const allColorsContainer = document.getElementById("allColorsContainer");
-// 		if (!!allColorsContainer) {
-// 			allColorsContainer.remove();
-// 		}
-// 		$all_colors_window.close();
-// 	}
-// 	$all_colors_window = $ToolWindow().title(myColorsTitle);
-// 	$all_colors_window.addClass("squish");
-// 	$all_colors_window.css(({
-// 		top: 100,
-// 		width: 785,
-// 	}));
-// 	$all_colors_window.css(("cssText", "top: 100px !important;"));
+async function show_my_colors_window(){
+	if($my_colors_window){
+		const myColorsContainer = document.getElementById("myColorsContainer");
+		if (!!myColorsContainer) {
+			myColorsContainer.remove();
+		}
+		$my_colors_window.close();
+	}
+	$my_colors_window = $ToolWindow().title(myColorsTitle);
+	$my_colors_window.addClass("squish");
+	$my_colors_window.css(({
+		top: 100,
+		width: 785,
+	}));
 
-// 	$all_colors_window.$content.append($all_colors_content.removeAttr("hidden"));
+	$my_colors_window.$content.append($my_colors_content.removeAttr("hidden"));
 
-// 	$all_colors_window.center();
-// 	$all_colors_window.center(); // @XXX - but it helps tho
+	$my_colors_window.center();
+	$my_colors_window.center(); // @XXX - but it helps tho
 
 
-// 	const loadingText = document.createElement("p");
-// 	loadingText.innerText = "Querying the blockchain...";
-// 	$(loadingText).addClass('rainbow-color-window-loading rainbow_text_animated');
+	const loadingText = document.createElement("p");
+	loadingText.innerText = "Querying the blockchain...";
+	$(loadingText).addClass('rainbow-color-window-loading rainbow_text_animated');
 	
-// 	const allColorsContainer = document.getElementById("blockchainColorsDiv");
-// 	$(allColorsContainer).append(loadingText);
-
-// 	await blockchain.updateColorList();
-
-// 	$(loadingText).remove();
-
-
-// 	const colorContainerHeight = 75;
-// 	const colorContainerWidth = 75;
+	const myColorsMainDivId = "myColorsDiv";
+	const myColorsContainer = document.getElementById(myColorsMainDivId);
 	
-// 	let mainContainer = document.createElement("div");
-// 	mainContainer.id = 'myColorsContainer'
-
-// 	const numColorsPerRow = 10;
-// 	const maxNumRowsPerPage = 5;
-
-// 	// Create pages
-// 	const numColorsPerPage = numColorsPerRow * maxNumRowsPerPage;
-// 	const numPages = Math.ceil(blockchain.state.colors.length / numColorsPerPage);
-// 	const pages = fillPagesWithColors(numPages, numColorsPerPage);
-
-// 	createPageLinks(numPages, mainContainer, pages, numColorsPerRow, maxNumRowsPerPage, colorContainerHeight, colorContainerWidth);
 	
-// 	setCurrentPage(1, mainContainer, pages, numColorsPerRow, maxNumRowsPerPage, colorContainerHeight, colorContainerWidth);
-// }
+	const colorContainerHeight = 75;
+	const colorContainerWidth = 75;
+	
+	let mainContainer = document.createElement("div");
+	mainContainer.id = 'myColorsContainer'
+	
+	const numColorsPerRow = 10;
+	const maxNumRowsPerPage = 5;
+	
+	$(myColorsContainer).append(loadingText);
+
+	// Create pages
+	const numColorsPerPage = numColorsPerRow * maxNumRowsPerPage;
+
+	const colorsForCurrentAccount = await blockchain.getColorsForCurrentAccount()
+	const numPages = Math.ceil(
+		colorsForCurrentAccount.length
+		/ numColorsPerPage
+	);
+	if (numPages == 0) {
+		const noAllColorsMsg = document.createElement("strong");
+		noAllColorsMsg.innerText = "No Paints found.";
+		$(noAllColorsMsg).css({
+			width: 100,
+			float: "left",
+		});
+		mainContainer.append(noAllColorsMsg);
+	}
+
+	const pages = fillPagesWithColors(numPages, numColorsPerPage, colorsForCurrentAccount);
+		
+	
+	createPageLinks(numPages, myColorsMainDivId, mainContainer, pages, numColorsPerRow, maxNumRowsPerPage, colorContainerHeight, colorContainerWidth);
+	
+	setCurrentPage(1, myColorsMainDivId, mainContainer, pages, numColorsPerRow, maxNumRowsPerPage, colorContainerHeight, colorContainerWidth);
+	$(loadingText).remove();
+}
 
 async function show_all_colors_window(){
 	if($all_colors_window){
@@ -1142,7 +1155,6 @@ async function show_all_colors_window(){
 		top: 100,
 		width: 785,
 	}));
-	$all_colors_window.css(("cssText", "top: 100px !important;"));
 
 	$all_colors_window.$content.append($all_colors_content.removeAttr("hidden"));
 
@@ -1160,9 +1172,6 @@ async function show_all_colors_window(){
 
 	await blockchain.updateColorList();
 
-	$(loadingText).remove();
-
-
 	const colorContainerHeight = 75;
 	const colorContainerWidth = 75;
 	
@@ -1175,16 +1184,30 @@ async function show_all_colors_window(){
 	// Create pages
 	const numColorsPerPage = numColorsPerRow * maxNumRowsPerPage;
 	const numPages = Math.ceil(blockchain.state.colors.length / numColorsPerPage);
-	const pages = fillPagesWithColors(numPages, numColorsPerPage);
+	if (numPages == 0) {
+		const noAllColorsMsg = document.createElement("strong");
+		noAllColorsMsg.innerText = "No Paints found.";
+		$(noAllColorsMsg).css({
+			width: 100,
+			float: "left",
+		});
+		mainContainer.append(noAllColorsMsg);
+	}
+	const pages = fillPagesWithColors(numPages, numColorsPerPage, blockchain.state.colors);
 
 	createPageLinks(numPages, allColorsMainDivId, mainContainer, pages, numColorsPerRow, maxNumRowsPerPage, colorContainerHeight, colorContainerWidth);
 	
 	setCurrentPage(1, allColorsMainDivId, mainContainer, pages, numColorsPerRow, maxNumRowsPerPage, colorContainerHeight, colorContainerWidth);
+
+	$(loadingText).remove();
 }
 
 function createPageLinks(numPages, mainDivId, mainContainer, pages, numColorsPerRow, maxNumRowsPerPage, colorContainerHeight, colorContainerWidth) {
 	// remove page links if in DOM
-	const pageNumContainerId = 'pageNumContainer';
+	if (numPages == 0) {
+		return;
+	}
+	const pageNumContainerId = 'pageNumContainer-' + mainDivId;
 	prevPageNumContainer = document.getElementById(pageNumContainerId);
 	if (!!prevPageNumContainer) {
 		$(prevPageNumContainer).empty();
@@ -1197,7 +1220,7 @@ function createPageLinks(numPages, mainDivId, mainContainer, pages, numColorsPer
 	pageNumberContainer.append(document.createElement("span").innerText = "Pages: ");
 	for (let i = 1; i <= numPages; i++) {
 		let pageNumLink = document.createElement("a");
-		$(pageNumLink).attr('id', "page-" + i)
+		$(pageNumLink).attr('id', "page-" + i + "-from-" + mainDivId)
 		$(pageNumLink).css({
 			cursor: "pointer",
 			textDecoration: "underline",
@@ -1218,27 +1241,30 @@ function createPageLinks(numPages, mainDivId, mainContainer, pages, numColorsPer
 function setCurrentPage(pageNumber, mainDivId, mainContainer, pages, numColorsPerRow, maxNumRowsPerPage, colorContainerHeight, colorContainerWidth) {
 	createColorPageForPageNumber(pages[pageNumber - 1], mainDivId, mainContainer, numColorsPerRow, maxNumRowsPerPage, colorContainerHeight, colorContainerWidth);
 	// reset the styling of all page numbers
-	$('*[id*=page-]:visible').each(function() {
+	$('*[id*=-from-' + mainDivId + ']:visible').each(function() {
 		$(this).css({
 			fontWeight: "normal",
 			textDecoration: "underline",
 		});
 	});
 	// update the styling for current page number
-	let pageNumElement = $('#page-' + pageNumber)[0]
+	let pageNumElement = $('#page-' + pageNumber + "-from-" + mainDivId)[0]
 	$(pageNumElement).css({
 		fontWeight: "bold",
 		textDecoration: "none",
 	});
 }
 
-function fillPagesWithColors(numPages, numColorsPerPage) {
+function fillPagesWithColors(numPages, numColorsPerPage, colorList) {
+	if (numPages == 0) {
+		return [[]]
+	}
 	let pages = []
 	for (let i = 0; i < numPages; i++) {
 		let currentPage = [];
 		for (let j = 0; j < numColorsPerPage; j++) {
 			// add colors keeping track of where we are in the pages
-			let c = blockchain.state.colors[pages.length * 50 + j];
+			let c = colorList[pages.length * 50 + j];
 			if (!c) {
 				break
 			}
@@ -1305,7 +1331,7 @@ function createColorPageForPageNumber(currentPageList, mainDivId, mainContainer,
 			cursor: "pointer",
 		});
 		colorDot.onclick = function () {
-			blockchain.state.paintProjectContract.getMetadataForColor(color).then((metadata) => {
+			blockchain.state.paintProjectContract.getTokenUriForColor(color).then((metadata) => {
 				blockchain.state.paintProjectContract.colorToImageUri(color).then((imageUri) => {
 					var title = "<h2>On-chain data for color " + color + "</h2>";
 					var iframe = "<iframe width='100%' height='10%' src='" + metadata + "'></iframe>"
