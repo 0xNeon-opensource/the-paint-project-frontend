@@ -932,7 +932,9 @@ let $about_paint_window;
 const $about_paint_content = $("#about-paint");
 let $news_window;
 let $all_colors_window;
+let $my_colors_window;
 const $all_colors_content = $("#allColors");
+const $my_colors_content = $("#myColors");
 const $this_version_news = $("#news");
 let $latest_news = $this_version_news;
 
@@ -1072,6 +1074,60 @@ function show_news(){
 	$news_window.center(); // @XXX - but it helps tho
 }
 
+// async function show_my_colors_window(){
+// 	console.log('showing my colors');
+// 	if($all_colors_window){
+// 		const allColorsContainer = document.getElementById("allColorsContainer");
+// 		if (!!allColorsContainer) {
+// 			allColorsContainer.remove();
+// 		}
+// 		$all_colors_window.close();
+// 	}
+// 	$all_colors_window = $ToolWindow().title(myColorsTitle);
+// 	$all_colors_window.addClass("squish");
+// 	$all_colors_window.css(({
+// 		top: 100,
+// 		width: 785,
+// 	}));
+// 	$all_colors_window.css(("cssText", "top: 100px !important;"));
+
+// 	$all_colors_window.$content.append($all_colors_content.removeAttr("hidden"));
+
+// 	$all_colors_window.center();
+// 	$all_colors_window.center(); // @XXX - but it helps tho
+
+
+// 	const loadingText = document.createElement("p");
+// 	loadingText.innerText = "Querying the blockchain...";
+// 	$(loadingText).addClass('rainbow-color-window-loading rainbow_text_animated');
+	
+// 	const allColorsContainer = document.getElementById("blockchainColorsDiv");
+// 	$(allColorsContainer).append(loadingText);
+
+// 	await blockchain.updateColorList();
+
+// 	$(loadingText).remove();
+
+
+// 	const colorContainerHeight = 75;
+// 	const colorContainerWidth = 75;
+	
+// 	let mainContainer = document.createElement("div");
+// 	mainContainer.id = 'myColorsContainer'
+
+// 	const numColorsPerRow = 10;
+// 	const maxNumRowsPerPage = 5;
+
+// 	// Create pages
+// 	const numColorsPerPage = numColorsPerRow * maxNumRowsPerPage;
+// 	const numPages = Math.ceil(blockchain.state.colors.length / numColorsPerPage);
+// 	const pages = fillPagesWithColors(numPages, numColorsPerPage);
+
+// 	createPageLinks(numPages, mainContainer, pages, numColorsPerRow, maxNumRowsPerPage, colorContainerHeight, colorContainerWidth);
+	
+// 	setCurrentPage(1, mainContainer, pages, numColorsPerRow, maxNumRowsPerPage, colorContainerHeight, colorContainerWidth);
+// }
+
 async function show_all_colors_window(){
 	if($all_colors_window){
 		const allColorsContainer = document.getElementById("allColorsContainer");
@@ -1098,7 +1154,8 @@ async function show_all_colors_window(){
 	loadingText.innerText = "Querying the blockchain...";
 	$(loadingText).addClass('rainbow-color-window-loading rainbow_text_animated');
 	
-	const allColorsContainer = document.getElementById("blockchainColorsDiv");
+	const allColorsMainDivId = "blockchainColorsDiv";
+	const allColorsContainer = document.getElementById(allColorsMainDivId);
 	$(allColorsContainer).append(loadingText);
 
 	await blockchain.updateColorList();
@@ -1120,13 +1177,22 @@ async function show_all_colors_window(){
 	const numPages = Math.ceil(blockchain.state.colors.length / numColorsPerPage);
 	const pages = fillPagesWithColors(numPages, numColorsPerPage);
 
-	createPageLinks(numPages, mainContainer, pages, numColorsPerRow, maxNumRowsPerPage, colorContainerHeight, colorContainerWidth);
+	createPageLinks(numPages, allColorsMainDivId, mainContainer, pages, numColorsPerRow, maxNumRowsPerPage, colorContainerHeight, colorContainerWidth);
 	
-	setCurrentPage(1, mainContainer, pages, numColorsPerRow, maxNumRowsPerPage, colorContainerHeight, colorContainerWidth);
+	setCurrentPage(1, allColorsMainDivId, mainContainer, pages, numColorsPerRow, maxNumRowsPerPage, colorContainerHeight, colorContainerWidth);
 }
 
-function createPageLinks(numPages, mainContainer, pages, numColorsPerRow, maxNumRowsPerPage, colorContainerHeight, colorContainerWidth) {
+function createPageLinks(numPages, mainDivId, mainContainer, pages, numColorsPerRow, maxNumRowsPerPage, colorContainerHeight, colorContainerWidth) {
+	// remove page links if in DOM
+	const pageNumContainerId = 'pageNumContainer';
+	prevPageNumContainer = document.getElementById(pageNumContainerId);
+	if (!!prevPageNumContainer) {
+		$(prevPageNumContainer).empty();
+		prevPageNumContainer.remove();
+	}
+
 	const pageNumberContainer = document.createElement("div");
+	$(pageNumberContainer).attr('id', pageNumContainerId);
 	$(pageNumberContainer).css({width: 760})
 	pageNumberContainer.append(document.createElement("span").innerText = "Pages: ");
 	for (let i = 1; i <= numPages; i++) {
@@ -1138,19 +1204,19 @@ function createPageLinks(numPages, mainContainer, pages, numColorsPerRow, maxNum
 		});
 		pageNumLink.innerText = i;
 		pageNumLink.onclick = function (event) {
-			setCurrentPage(i, mainContainer, pages, numColorsPerRow, maxNumRowsPerPage, colorContainerHeight, colorContainerWidth)
+			setCurrentPage(i, mainDivId, mainContainer, pages, numColorsPerRow, maxNumRowsPerPage, colorContainerHeight, colorContainerWidth)
 		};
 		pageNumberContainer.append(pageNumLink);
 		if (i !== numPages) {
 			pageNumberContainer.append(document.createElement("span").innerText = ", ");
 		}
 	}
-	const allColorsContainer = document.getElementById("blockchainColorsDiv");
+	const allColorsContainer = document.getElementById(mainDivId);
 	$(allColorsContainer).append(pageNumberContainer);
 }
 
-function setCurrentPage(pageNumber, mainContainer, pages, numColorsPerRow, maxNumRowsPerPage, colorContainerHeight, colorContainerWidth) {
-	createColorPageForPageNumber(pages[pageNumber - 1], mainContainer, numColorsPerRow, maxNumRowsPerPage, colorContainerHeight, colorContainerWidth);
+function setCurrentPage(pageNumber, mainDivId, mainContainer, pages, numColorsPerRow, maxNumRowsPerPage, colorContainerHeight, colorContainerWidth) {
+	createColorPageForPageNumber(pages[pageNumber - 1], mainDivId, mainContainer, numColorsPerRow, maxNumRowsPerPage, colorContainerHeight, colorContainerWidth);
 	// reset the styling of all page numbers
 	$('*[id*=page-]:visible').each(function() {
 		$(this).css({
@@ -1183,11 +1249,16 @@ function fillPagesWithColors(numPages, numColorsPerPage) {
 	return pages;
 }
 
-function createColorPageForPageNumber(currentPageList, mainContainer, numColorsPerRow, maxNumRowsPerPage, colorContainerHeight, colorContainerWidth) {
-	const allColorsContainer = document.getElementById("allColorsContainer");
-	if (!!allColorsContainer) {
-		$(allColorsContainer).empty();
-		allColorsContainer.remove();
+function createColorPageForPageNumber(currentPageList, mainDivId, mainContainer, numColorsPerRow, maxNumRowsPerPage, colorContainerHeight, colorContainerWidth) {
+	let colorsContainer;
+	if (mainDivId == "blockchainColorsDiv") {
+		colorsContainer = document.getElementById("allColorsContainer");
+	} else if (mainDivId == "myColorsDiv") {
+		colorsContainer = document.getElementById("myColorsContainer");
+	}
+	if (!!colorsContainer) {
+		$(colorsContainer).empty();
+		colorsContainer.remove();
 	}
 
 	const wiggleRoom = colorContainerWidth - 10;
@@ -1208,7 +1279,7 @@ function createColorPageForPageNumber(currentPageList, mainContainer, numColorsP
 		// backgroundColor: "red",
 		// borderStyle: "solid",
 	});
-	document.getElementById("blockchainColorsDiv").appendChild(mainContainer);
+	document.getElementById(mainDivId).appendChild(mainContainer);
 
 	currentPageList.forEach(color => {
 		let colorContainer = document.createElement("div");
@@ -1234,21 +1305,20 @@ function createColorPageForPageNumber(currentPageList, mainContainer, numColorsP
 			cursor: "pointer",
 		});
 		colorDot.onclick = function () {
-			document.body.style.cursor='wait';
-			console.log(`color`, color);
-			// blockchain.state.paintProjectContract.colorToImageUri(color).then((imageUri) => {
 			blockchain.state.paintProjectContract.getMetadataForColor(color).then((metadata) => {
-				document.body.style.cursor='default';
-				console.log(`metadata`, metadata)
-				window.open(metadata);
-				// console.log(`imageUri`, imageUri);
-				// window.open(imageUri);
-				// var string = doc.output(imageUri);
-				// var iframe = "<iframe width='100%' height='100%' src='" + imageUri + "'></iframe>"
-				// var x = window.open();
-				// x.document.open();
-				// x.document.write(iframe);
-				// x.document.close();
+				blockchain.state.paintProjectContract.colorToImageUri(color).then((imageUri) => {
+					var title = "<h2>On-chain data for color " + color + "</h2>";
+					var iframe = "<iframe width='100%' height='10%' src='" + metadata + "'></iframe>"
+					var desc = "<p>To see what this color looks like saved on the blockchain, open the below link <strong>in a new tab</strong>. Or, copy and paste everything in the \"image\" value into a new tab, not including the quotes.</p>"
+					var seeColorLink = "<a href='" + imageUri + "'>See color</a>"
+					var x = window.open();
+					x.document.open();
+					x.document.write(title);
+					x.document.write(iframe);
+					x.document.write(desc);
+					x.document.write(seeColorLink);
+					x.document.close();
+				});
 			});
 		}
 

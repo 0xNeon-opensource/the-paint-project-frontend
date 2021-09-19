@@ -702,7 +702,7 @@ window.menus = {
 			speech_recognition: [
 				"Your owned paints",
 			],
-			action: ()=> { show_about_paint(); },
+			action: ()=> { show_my_colors_window(); },
 			description: localize("Displays information about this application."),
 			//description: localize("Displays program information, version number, and copyright."),
 		}
@@ -742,44 +742,44 @@ window.menus = {
 		}
 	],
 	[localize("E&xtras")]: [
-		{
-			item: localize("&History"),
-			shortcut: "Ctrl+Shift+Y",
-			speech_recognition: [
-				// This is a duplicate menu item (for easy access), so it doesn't need speech recognition data here.
-			],
-			action: ()=> { show_document_history(); },
-			description: localize("Shows the document history and lets you navigate to states not accessible with Undo or Repeat."),
-		},
-		{
-			item: localize("&Render History As GIF"),
-			shortcut: "Ctrl+Shift+G",
-			speech_recognition: [
-				// @TODO: animated gif, blah
-				"render history as gif", "render history as a gif", "render history animation", "make history animation", "make animation of history", "make animation of document history", "make animation from document history",
-				"render a gif from the history", "render a gif animation from the history", "render an animation from the history",
-				"make a gif from the history", "make a gif animation from the history", "make an animation from the history",
-				"create a gif from the history", "create a gif animation from the history", "create an animation from the history",
-				// aaaaaaaaaaaaaaaaaaaaaaaaaa *exponentially explodes*
-				"make a gif", "make a gif of the history", "make a gif of the document history", "make a gif from the document history",
-				"create a gif", "create a gif of the history", "create a gif of the document history", "create a gif from the document history",
-				"make gif", "make gif of the history", "make gif of the document history", "make gif from the document history",
-				"create gif", "create gif of the history", "create gif of the document history", "create gif from the document history",
-				"make an animation", "make an animation of the history", "make an animation of the document history", "make an animation from the document history",
-				"create an animation", "create an animation of the history", "create an animation of the document history", "create an animation from the document history",
-				"make animation", "make animation of the history", "make animation of the document history", "make animation from the document history",
-				"create animation", "create animation of the history", "create animation of the document history", "create animation from the document history",
-			],
-			action: ()=> { render_history_as_gif(); },
-			description: localize("Creates an animation from the document history."),
-		},
 		// {
-		// 	item: localize("Render History as &APNG",
-		// 	// shortcut: "Ctrl+Shift+A",
-		// 	action: ()=> { render_history_as_apng(); },
+		// 	item: localize("&History"),
+		// 	shortcut: "Ctrl+Shift+Y",
+		// 	speech_recognition: [
+		// 		// This is a duplicate menu item (for easy access), so it doesn't need speech recognition data here.
+		// 	],
+		// 	action: ()=> { show_document_history(); },
+		// 	description: localize("Shows the document history and lets you navigate to states not accessible with Undo or Repeat."),
+		// },
+		// {
+		// 	item: localize("&Render History As GIF"),
+		// 	shortcut: "Ctrl+Shift+G",
+		// 	speech_recognition: [
+		// 		// @TODO: animated gif, blah
+		// 		"render history as gif", "render history as a gif", "render history animation", "make history animation", "make animation of history", "make animation of document history", "make animation from document history",
+		// 		"render a gif from the history", "render a gif animation from the history", "render an animation from the history",
+		// 		"make a gif from the history", "make a gif animation from the history", "make an animation from the history",
+		// 		"create a gif from the history", "create a gif animation from the history", "create an animation from the history",
+		// 		// aaaaaaaaaaaaaaaaaaaaaaaaaa *exponentially explodes*
+		// 		"make a gif", "make a gif of the history", "make a gif of the document history", "make a gif from the document history",
+		// 		"create a gif", "create a gif of the history", "create a gif of the document history", "create a gif from the document history",
+		// 		"make gif", "make gif of the history", "make gif of the document history", "make gif from the document history",
+		// 		"create gif", "create gif of the history", "create gif of the document history", "create gif from the document history",
+		// 		"make an animation", "make an animation of the history", "make an animation of the document history", "make an animation from the document history",
+		// 		"create an animation", "create an animation of the history", "create an animation of the document history", "create an animation from the document history",
+		// 		"make animation", "make animation of the history", "make animation of the document history", "make animation from the document history",
+		// 		"create animation", "create animation of the history", "create animation of the document history", "create animation from the document history",
+		// 	],
+		// 	action: ()=> { render_history_as_gif(); },
 		// 	description: localize("Creates an animation from the document history."),
 		// },
-		MENU_DIVIDER,
+		// // {
+		// // 	item: localize("Render History as &APNG",
+		// // 	// shortcut: "Ctrl+Shift+A",
+		// // 	action: ()=> { render_history_as_apng(); },
+		// // 	description: localize("Creates an animation from the document history."),
+		// // },
+		// MENU_DIVIDER,
 		// {
 		// 	item: localize("Extra T&ool Box",
 		// 	checkbox: {
@@ -1074,35 +1074,35 @@ window.menus = {
 			},
 			description: localize("Arranges the color box vertically."),
 		},
-		MENU_DIVIDER,
-		{
-			item: localize("Project News"),
-			speech_recognition: [
-				"project news", "news about the project", "news about this project",
-				"app news", "news about the app", "news about this app",
-				"application news", "news about the application", "news about this application",
-				"what's new", "new features",
-				"show news", "show news update", "news update",
-			],
-			action: ()=> { show_news(); },
-			description: localize("Shows news about JS Paint."),
-		},
-		{
-			item: localize("GitHub"),
-			speech_recognition: [
-				"repo on github", "project on github", "show the source code", "show source code",
-			],
-			action: ()=> { window.open("https://github.com/1j01/jspaint"); },
-			description: localize("Shows the project on GitHub."),
-		},
-		{
-			item: localize("Donate"),
-			speech_recognition: [
-				"donate", "make a monetary contribution",
-			],
-			action: ()=> { window.open("https://www.paypal.me/IsaiahOdhner"); },
-			description: localize("Supports the project."),
-		},
+		// MENU_DIVIDER,
+		// {
+		// 	item: localize("Project News"),
+		// 	speech_recognition: [
+		// 		"project news", "news about the project", "news about this project",
+		// 		"app news", "news about the app", "news about this app",
+		// 		"application news", "news about the application", "news about this application",
+		// 		"what's new", "new features",
+		// 		"show news", "show news update", "news update",
+		// 	],
+		// 	action: ()=> { show_news(); },
+		// 	description: localize("Shows news about JS Paint."),
+		// },
+		// {
+		// 	item: localize("GitHub"),
+		// 	speech_recognition: [
+		// 		"repo on github", "project on github", "show the source code", "show source code",
+		// 	],
+		// 	action: ()=> { window.open("https://github.com/1j01/jspaint"); },
+		// 	description: localize("Shows the project on GitHub."),
+		// },
+		// {
+		// 	item: localize("Donate"),
+		// 	speech_recognition: [
+		// 		"donate", "make a monetary contribution",
+		// 	],
+		// 	action: ()=> { window.open("https://www.paypal.me/IsaiahOdhner"); },
+		// 	description: localize("Supports the project."),
+		// },
 	],
 };
 
