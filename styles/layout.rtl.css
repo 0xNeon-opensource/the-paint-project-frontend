@@ -1063,7 +1063,7 @@ html, body, .jspaint {
 	margin-left: 40px;
 	width: 150px;
 	min-height: 2.2em;
-	left: 200px;
+	right: 200px;
 }
 
 #news {

@@ -33965,7 +33965,7 @@ class Blockchain extends React.Component {
   }
   
   showWalletNotConnectedText() {
-    accountNumberLabel.innerHTML = "| Wallet not connected. Click the Wallet button to the left to connect.";
+    accountNumberLabel.innerHTML = "| Wallet not connected. Click the Wallet button on the left to connect.";
   }
 
   async getColorsForCurrentAccount() {

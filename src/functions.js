@@ -365,7 +365,7 @@ function reset_file(){
 	document_file_path = null;
 	file_name = localize("untitled");
 	file_name_chosen = false;
-	update_title();
+	// update_title();
 	saved = true;
 }
 
@@ -940,7 +940,7 @@ function show_about_paint(){
 	if($about_paint_window){
 		$about_paint_window.close();
 	}
-	$about_paint_window = $ToolWindow().title(localize("About Paint"));
+	$about_paint_window = $ToolWindow().title(localize("About The Paint Project"));
 	$about_paint_window.addClass("about-paint squish");
 	if (is_pride_month) {
 		$("#paint-32x32").attr("src", "./images/icons/gay-es-paint-32x32-light-outline.png");
@@ -1109,7 +1109,13 @@ async function show_my_colors_window(){
 	// Create pages
 	const numColorsPerPage = numColorsPerRow * maxNumRowsPerPage;
 
-	const colorsForCurrentAccount = await blockchain.getColorsForCurrentAccount()
+	const colorsForCurrentAccount = await blockchain.getColorsForCurrentAccount().catch((error) => {
+		$(loadingText).remove();
+		console.error(error);
+		show_error_message('No wallet connected. Please connect your wallet by clicking the \"Wallet\" button in the top menu.')
+	});
+
+
 	const numPages = Math.ceil(
 		colorsForCurrentAccount.length
 		/ numColorsPerPage
