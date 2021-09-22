@@ -1179,12 +1179,15 @@ async function show_all_colors_window(){
 	const numColorsPerRow = 10;
 	const maxNumRowsPerPage = 5;
 
+	if (!isReadyForMinting) {
+		show_error_message("You'll be able to see minted paints when the project is launched. To be the first to know when we launch, join our Discord. The link is in the About page in the \"Help & About\" menu above.")
+	}
 	// Create pages
 	const numColorsPerPage = numColorsPerRow * maxNumRowsPerPage;
 	const numPages = Math.ceil(blockchain.state.colors.length / numColorsPerPage);
 	if (numPages == 0) {
 		const noAllColorsMsg = document.createElement("strong");
-		noAllColorsMsg.innerText = "No Paints found.";
+		noAllColorsMsg.innerText = "No Paints have been minted yet.";
 		$(noAllColorsMsg).css({
 			width: 100,
 			float: "left",

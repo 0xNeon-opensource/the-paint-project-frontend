@@ -33868,6 +33868,10 @@ class Blockchain extends React.Component {
   }
 
   async connectWallet() {
+    if (!isReadyForMinting) {
+      show_error_message("You'll be able to connect a wallet when the project is launched. To be the first to know when we launch, join our Discord. The link is in the About page in the \"Help & About\" menu above.")
+      return;
+    }
     await this.state.provider.send("eth_requestAccounts", []);
     this.updateContractWithSignerInfo();
     await this.showWalletInfo();

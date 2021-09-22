@@ -782,58 +782,63 @@ function choose_color(initial_color, callback) {
 	// $right.append(rainbow_canvas, luminosity_canvas, result_canvas, $color_solid_label, lum_arrow_canvas);
 	$right.append(rainbow_canvas, luminosity_canvas, result_canvas, lum_arrow_canvas);
 
-	$w.$Button(localize("Check availability"), () => {
-		resetColorForm();
-		$left.append(loadingElispes);
-		if (!hexErrorLabel.innerText) {
-			blockchain.updateColorList().then(function () {
-				loadingElispes.remove();
-				console.log('updated color list');
-				if (blockchain.state.colors.includes(hexInput.value)) {
-					$left.append(colorNotAvailContainer);
-				} else {
-					// $left.append(`<p style="color: green;">This color is available.</p>`);
-					// $left.append(`<p style="color: green;">Are you ready to make history?</p>`);
-					$left.append(availableMgs1);
-					$left.append(availableMgs2);
-					mintButton.onclick = function(event) {
-						event.preventDefault();
-						genericErrorMsg.remove();
-						walletErrorMsg.remove();
-						mintSuccessMsg.remove();
-						viewPaintMsg.remove();
-						const colorToMint = hexInput.value;
-						$left.append(mintWaitingMsg);
-						blockchain.mint(colorToMint).then(function(res) {
-							mintWaitingMsg.remove();
-							blockchain.updateColorList();
-							console.log(`res from edit colors`, res);
-							$left.append(mintSuccessMsg);
-							$left.append(viewPaintMsg);
-						}).catch((mintError) => {
-							console.log(`Error while trying to mint:`, mintError)
-							mintWaitingMsg.remove();
-							if (mintError.toString().includes("transaction requires a signer")) {
-								$left.append(walletErrorMsg);
-							} else {
-								$left.append(genericErrorMsg);
-							}
-						})
+	if (!isReadyForMinting) {
+		show_error_message("You'll be able to mint a paint when the project is launched. To be the first to know when we launch, join our Discord. The link is in the About page in the \"Help & About\" menu above.")
+	} else {
+		$w.$Button(localize("Check availability"), () => {
+			resetColorForm();
+			$left.append(loadingElispes);
+			if (!hexErrorLabel.innerText) {
+				blockchain.updateColorList().then(function () {
+					loadingElispes.remove();
+					console.log('updated color list');
+					if (blockchain.state.colors.includes(hexInput.value)) {
+						$left.append(colorNotAvailContainer);
+					} else {
+						// $left.append(`<p style="color: green;">This color is available.</p>`);
+						// $left.append(`<p style="color: green;">Are you ready to make history?</p>`);
+						$left.append(availableMgs1);
+						$left.append(availableMgs2);
+						mintButton.onclick = function(event) {
+							event.preventDefault();
+							genericErrorMsg.remove();
+							walletErrorMsg.remove();
+							mintSuccessMsg.remove();
+							viewPaintMsg.remove();
+							const colorToMint = hexInput.value;
+							$left.append(mintWaitingMsg);
+							blockchain.mint(colorToMint).then(function(res) {
+								mintWaitingMsg.remove();
+								blockchain.updateColorList();
+								console.log(`res from edit colors`, res);
+								$left.append(mintSuccessMsg);
+								$left.append(viewPaintMsg);
+							}).catch((mintError) => {
+								console.log(`Error while trying to mint:`, mintError)
+								mintWaitingMsg.remove();
+								if (mintError.toString().includes("transaction requires a signer")) {
+									$left.append(walletErrorMsg);
+								} else {
+									$left.append(genericErrorMsg);
+								}
+							})
+						}
+						$left.append(mintButton);
 					}
-					$left.append(mintButton);
-				}
-			}).catch((availabilityError) => {
-				loadingElispes.remove();
-				console.log(`Error while checking color availability:`, availabilityError);
-				$left.append(genericErrorMsg);
-			})
-		}
-				
-	});
-	console.log(`$w.$buttons`, $w.$buttons);
+				}).catch((availabilityError) => {
+					loadingElispes.remove();
+					console.log(`Error while checking color availability:`, availabilityError);
+					$left.append(genericErrorMsg);
+				})
+			}
+					
+		});
+		console.log(`$w.$buttons`, $w.$buttons);
+	
+		$left.append($w.$buttons);
+		$('button:contains("Check availability")').css({left: 50});
+	}
 
-	$left.append($w.$buttons);
-	$('button:contains("Check availability")').css({left: 50});
 
 	// initially select the first color cell that matches the swatch to edit, if any
 	// (first in the basic colors, then in the custom colors otherwise - implicitly)

@@ -20,7 +20,7 @@ function $ToolWindow($component){
 			document.getElementById("allColorsContainer").remove();
 		}
 		if ($w.isMyColorsWindow) {
-			document.getElementById("myColorsContainer").remove();
+			document.getElementById("isMyColorsWindow").remove();
 		}
 		$w.close();
 	});
@@ -204,6 +204,7 @@ function $ToolWindow($component){
 			}
 			if (!!myColorsTitle && title == myColorsTitle) {
 				$w.isMyColorsWindow = true;
+				$($w).attr('id', 'isMyColorsWindow');
 			}
 			return $w;
 		}else{
