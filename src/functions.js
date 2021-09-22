@@ -864,31 +864,19 @@ function are_you_sure(action, canceled){
 
 function show_error_message(message, error){
 	const $w = $FormToolWindow().title(localize("The Paint Project")).addClass("dialogue-window squish");
+	$($w).attr('id', error);
 	$w.$main.text(message);
 	$w.$main.css("max-width", "600px");
-	if(error){
-		$(E("pre"))
-		.appendTo($w.$main)
-		.text(error.stack || error.toString())
-		.css({
-			background: "white",
-			color: "#333",
-			// background: "#A00",
-			// color: "white",
-			fontFamily: "monospace",
-			width: "500px",
-			overflow: "auto",
-		});
-	}
+
 	$w.$Button(localize("OK"), () => {
+		if (error == "network") {
+			blockchain.state.isShowingNetworkError = false;
+		}
 		$w.close();
 	});
 	$w.center();
-	if (error) {
-		window.console && console.error(message, error);
-	} else {
-		window.console && console.error(message);
-	}
+
+	window.console && console.error(message);
 }
 
 // @TODO: close are_you_sure windows and these Error windows when switching sessions
@@ -973,8 +961,12 @@ function show_about_paint(){
 		location.reload();
 	});
 	
-	$("#view-project-news").on("click", ()=> {
-		show_news();
+	$("#twitter").on("click", ()=> {
+		window.open('https://twitter.com/0xPaintProject')
+	});
+	
+	$("#discord").on("click", ()=> {
+		window.open('')
 	});
 	
 	$("#checking-for-updates").removeAttr("hidden");

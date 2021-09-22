@@ -716,7 +716,7 @@ window.menus = {
 			description: localize("Show the colors minted on the blockchain."),
 		},
 	],
-	[localize("&Help")]: [
+	[localize("&Help \& About")]: [
 		{
 			item: localize("&Help Topics"),
 			speech_recognition: [
@@ -728,9 +728,9 @@ window.menus = {
 		},
 		MENU_DIVIDER,
 		{
-			item: localize("&About Paint"),
+			item: localize("&About The Paint Project"),
 			speech_recognition: [
-				"about paint", "about js paint", "about jspaint", "show about window", "open about window", "about window",
+				"about paint", "about the paint project", "about paint project", "show about window", "open about window", "about window",
 				"app info", "about the app", "app information", "information about the app",
 				"application info", "about the application", "application information", "information about the application",
 				"who made this", "who did this", "who did this xd",

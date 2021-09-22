@@ -47,45 +47,27 @@
 		<script src="src/theme.js"></script>
 	</head>
 	<body>
-		<div id="about-paint" style="display: none">
+		<div id="about-paint" style="display: none; font-family: consolas;">
 			<h1 id="about-paint-header">
-				<img src="images/icons/32x32.png" width="32" height="32" id="paint-32x32" alt=""/>
-				<span id="jspaint-project-name">JS Paint</span>
-				<small id="jspaint-version" title="expect bugs!">Alpha</small>
-				<button id="view-project-news">View Project News</button>
+				<img src="images/icons/32x32.png" width="32" height="32" id="paint-32x32" alt="" style="margin-left: 210px;"/>
+				<span id="jspaint-project-name">The Paint Project</span>
 			</h1>
+			<button id="twitter">@ us on Twitter</button>
+			<button id="discord">Join us on Discord</button>
 			
-			<div id="maybe-outdated-view-project-news" hidden>
-				<div id="maybe-outdated-line">
-					<div id="outdated" hidden>
-						<div class="on-official-host">
-							There's a new version of JS Paint. <a id="refresh-to-update" href=".">Refresh</a> to get it.
-						</div>
-						<div class="on-third-party-host">
-							This instance of JS Paint is outdated compared to <a href="https://jspaint.app" target="_blank">jspaint.app</a>.
-						</div>
-						<div class="on-dev-host">
-							This version of JS Paint is outdated compared to <a href="https://jspaint.app" target="_blank">jspaint.app</a>.
-						</div>
-					</div>
-					<div id="checking-for-updates" hidden>
-						Checking for updates...
-					</div>
-					<div id="failed-to-check-if-outdated" hidden>
-						Couldn't check for updates.
-						<span class="navigator-offline">You're offline.</span>
-						<span class="navigator-online">JS Paint may be outdated.</span>
-					</div>
-				</div>
-				
+			<div style="width: 750px;">
+				<p>The Paint Project is a collection of the first colors as NFTs on any open public blockchain.</p>
+				<p>The colors created here will reamain immutably on Ethereum, completely on-chain.</p>
+				<p>This is a community-centered project:</p>
+				<ul>
+					 <li>There will be a fair minting process, everyone gets access at the same time.</li>
+					 <li>Mint price is 0. Users just pay gas.</li>
+					 <li>There is no roadmap. This was a deliberate decision to let the community drive where it wants to take this historic project. The Paint Project creators' job is to organize the community, not decide its direction.</li>
+					</ul>
+				<p>Infinite thanks to the contributors of <a href="https://github.com/1j01/jspaint#readme">JS Paint</a>, the project that was forked to create this web page.</p>
+				<p>The code for this frontend and contract will be made open source after all 1024 colors are minted.</p>
+				<p>Created by <a href="https://twitter.com/the0xcollective">the0xcollective</a></p>
 			</div>
-			<p>JS Paint is a web-based remake of MS Paint by <a href="https://isaiahodhner.io/">Isaiah Odhner</a>.</p>
-			<p>Read about the project and <b>extra features</b> on <a href="https://github.com/1j01/jspaint#readme">the README</a>.</p>
-			<p>Request features and report bugs <a href="https://github.com/1j01/jspaint/issues">on GitHub</a>
-			or <a href="mailto:isaiahodhner@gmail.com?subject=JS%20Paint">by email</a>.</p>
-			<p>If you want to support the project &amp; cover domain fees:
-				<a href="https://www.paypal.me/IsaiahOdhner" target="_blank">paypal.me/IsaiahOdhner</a>
-			</p>
 		</div>
 		<div id="news" hidden>
 			<article class="news-entry" id="news-2020-accessibility-update">
@@ -763,7 +745,7 @@
 		</script>
 		<div id="myColors" hidden>
 			<article class="news-entry" id="news-2020-accessibility-update">
-				<h1>FUCKThe first colors on the blockchain</h1>
+				<h1>Colors on the blockchain owned by you</h1>
 				<p>You can also view the Paints on <a href="https://opensea.io/" target="_blank" rel="noopener noreferrer">OpenSea</a></p>
 				<i>Click a color to see it's on-chain data rendered in a new tab</i>
 				<div id="myColorsDiv" style="margin-top: 10px;"></div>

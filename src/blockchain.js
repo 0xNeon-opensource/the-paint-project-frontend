@@ -33818,7 +33818,8 @@ class Blockchain extends React.Component {
       balance: undefined,
       paintProjectContract: undefined,
       totalSupply: 0,
-      colors: []    
+      colors: [],
+      isShowingNetworkError: false   
     };
   }
 
@@ -33826,7 +33827,7 @@ class Blockchain extends React.Component {
   async componentDidMount() {
     await this.loadWeb3();
     await this.loadBlockchainData();
-    // this.listenForChangesInNetworkAndWallet()
+    this.listenForChangesInNetworkAndWallet()
   }
 
   async loadWeb3() {
@@ -33840,6 +33841,7 @@ class Blockchain extends React.Component {
   async loadBlockchainData() {
     const networkData = thePaintProject.networks[window.ethereum.networkVersion];
     if (networkData) {
+      this.closeNetworkError();
       const signer = this.state.provider.getSigner();
       console.log(`signer`, signer);
       let walletConnected;
@@ -33857,10 +33859,10 @@ class Blockchain extends React.Component {
         this.updateContractWithNoWallet(networkData);
       }
 
-      // await this.updateColorList();
-
     } else {
-      show_error_message('We have detected you switched networks. Please switch to the Ethereum Mainnet.')
+      console.log('hol up, sleeping');
+      await this.sleep(1000)
+      this.showNetworkError();
     }
   }
 
@@ -33884,15 +33886,38 @@ class Blockchain extends React.Component {
     await this.showWalletInfo();
     resetColorForm();
   }
-  // async listenForChangesInNetworkAndWallet() {
-  //   while (true) {
-  //     setTimeout(() => {
-  //       const networkData = thePaintProject.networks[window.ethereum.networkVersion];
-  //       console.log(`networkData`, networkData);
-  //     }, 5000);
-  //   }
-  //   // if not on mainnet, show error
-  // }
+
+  async listenForChangesInNetworkAndWallet() {
+    // wait for page to load before listening
+    this.sleep(5000);
+    while(true) {
+      console.log("listening for changes in wallet...");
+      const networkData = thePaintProject.networks[window.ethereum.networkVersion];
+      console.log(`networkData`, networkData);
+      if (networkData) {
+        this.closeNetworkError();
+      } else {
+        this.showNetworkError();
+      }
+      await this.sleep(1000);
+    }
+    // if not on mainnet, show error
+  }
+  
+  async sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+  }
+
+  closeNetworkError() {
+    $("#network").remove();
+  }
+
+  showNetworkError() {
+    if (!this.state.isShowingNetworkError) {
+      show_error_message('We have detected you switched networks. Please switch to the Ethereum Mainnet.', "network")
+      this.state.isShowingNetworkError = true;
+    }
+  }
 
   updateContractWithSignerInfo() {
     const networkData = thePaintProject.networks[window.ethereum.networkVersion];
