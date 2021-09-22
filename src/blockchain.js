@@ -33844,20 +33844,7 @@ class Blockchain extends React.Component {
       this.closeNetworkError();
       const signer = this.state.provider.getSigner();
       console.log(`signer`, signer);
-      let walletConnected;
-      try {
-        await signer.getAddress();
-        walletConnected = true;
-      } catch (e) {
-        walletConnected = false;
-      }
-      console.log(`walletConnected`, walletConnected)
-      if (walletConnected) {
-        this.updateContractWithSignerInfo();
-        await this.showWalletInfo();
-      } else {
-        this.updateContractWithNoWallet(networkData);
-      }
+      await this.updateContractBasedOnWalletConnection(signer, networkData);
 
     } else {
       console.log('hol up, sleeping');
@@ -33889,13 +33876,22 @@ class Blockchain extends React.Component {
 
   async listenForChangesInNetworkAndWallet() {
     // wait for page to load before listening
-    this.sleep(5000);
+    await this.sleep(1000);
     while(true) {
-      console.log("listening for changes in wallet...");
       const networkData = thePaintProject.networks[window.ethereum.networkVersion];
-      console.log(`networkData`, networkData);
       if (networkData) {
         this.closeNetworkError();
+        const signer = this.state.provider.getSigner();
+        try {
+          const account = await signer.getAddress();
+          if(this.state.account != account) {
+            console.log('WALLET HAS CHANGED');
+            await this.updateContractBasedOnWalletConnection(signer, networkData);
+          }
+        } catch (error) {
+          // no wallet connected
+          await this.updateContractBasedOnWalletConnection(signer, networkData);
+        }
       } else {
         this.showNetworkError();
       }
@@ -33919,27 +33915,46 @@ class Blockchain extends React.Component {
     }
   }
 
+  async updateContractBasedOnWalletConnection(signer, networkData) {
+    let walletConnected;
+    try {
+      await signer.getAddress();
+      walletConnected = true;
+    } catch (e) {
+      walletConnected = false;
+    }
+    console.log(`walletConnected`, walletConnected);
+    if (walletConnected) {
+      this.updateContractWithSignerInfo();
+      await this.showWalletInfo();
+    } else {
+      this.updateContractWithNoWallet(networkData);
+    }
+    resetColorForm();
+  }
+
   updateContractWithSignerInfo() {
     const networkData = thePaintProject.networks[window.ethereum.networkVersion];
-    console.log('updateContractWithSignerInfo()');
+    // console.log('updateContractWithSignerInfo()');
     const paintProjectContract = new ethers.Contract(
       networkData.address,
       thePaintProject.abi,
       this.state.provider.getSigner()
     );
     this.state.paintProjectContract = paintProjectContract;
-    console.log('this.state.paintProjectContract :>> ', this.state.paintProjectContract);
+    // console.log('this.state.paintProjectContract :>> ', this.state.paintProjectContract);
   }
 
   updateContractWithNoWallet(networkData) {
-    console.log('updateContractWithNoWallet');
+    // console.log('updateContractWithNoWallet');
     const paintProjectContract = new ethers.Contract(
       networkData.address,
       thePaintProject.abi,
       this.state.provider
     );
     this.state.paintProjectContract = paintProjectContract;
-    console.log('this.state.paintProjectContract :>> ', this.state.paintProjectContract);
+    this.showWalletNotConnectedText();
+    // console.log('this.state.paintProjectContract :>> ', this.state.paintProjectContract);
   }
 
   async showWalletInfo() {
@@ -33947,6 +33962,10 @@ class Blockchain extends React.Component {
     const account = await signer.getAddress();
     this.state.account = account;
     accountNumberLabel.innerHTML = "| Connected with " + account;
+  }
+  
+  showWalletNotConnectedText() {
+    accountNumberLabel.innerHTML = "| Wallet not connected. Click the Wallet button to the left to connect.";
   }
 
   async getColorsForCurrentAccount() {
