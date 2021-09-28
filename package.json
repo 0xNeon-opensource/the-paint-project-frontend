@@ -94,6 +94,7 @@
     "update-localization": "node ./localization/preprocess.js",
     "dev": "run-p watch-css dev:start-server",
     "dev:start-server": "live-server --ignorePattern=\"(node_modules|cypress|out)[/\\\\\\\\]|package\\.json|cypress\\.json\"",
+    "start": "live-server --ignorePattern=\"(node_modules|cypress|out)[/\\\\\\\\]|package\\.json|cypress\\.json\"",
     "dev:start-server:NOTE": "@XXX: the octuple backlash ends up meaning a single backslash on Linux, two backslashes on Windows. In this case it's fine because it's in a regexp character class so the extra is redundant and doesn't cause an error.",
     "test:start-server": "live-server --port=11822 --no-browser --ignorePattern=\"(node_modules|cypress|out)[/\\\\\\\\]|package\\.json|cypress\\.json\"",
     "test:start-server:NOTE": "@XXX: the octuple backlash ends up meaning a single backslash on Linux, two backslashes on Windows. In this case it's fine because it's in a regexp character class so the extra is redundant and doesn't cause an error.",
