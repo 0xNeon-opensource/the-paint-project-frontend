@@ -728,6 +728,30 @@ window.menus = {
 			action: ()=> { show_about_paint(); },
 			description: localize("Displays information about this application."),
 			//description: localize("Displays program information, version number, and copyright."),
+		},
+		{
+			item: localize("&Discord"),
+			speech_recognition: [
+				"about paint", "about the paint project", "about paint project", "show about window", "open about window", "about window",
+				"app info", "about the app", "app information", "information about the app",
+				"application info", "about the application", "application information", "information about the application",
+				"who made this", "who did this", "who did this xd",
+			],
+			action: ()=> { window.open('https://discord.com/'); },
+			description: localize("Displays information about this application."),
+			//description: localize("Displays program information, version number, and copyright."),
+		},
+		{
+			item: localize("&Twitter"),
+			speech_recognition: [
+				"about paint", "about the paint project", "about paint project", "show about window", "open about window", "about window",
+				"app info", "about the app", "app information", "information about the app",
+				"application info", "about the application", "application information", "information about the application",
+				"who made this", "who did this", "who did this xd",
+			],
+			action: ()=> { window.open('https://twitter.com/0xPaintProject'); },
+			description: localize("Displays information about this application."),
+			//description: localize("Displays program information, version number, and copyright."),
 		}
 	],
 	[localize("E&xtras")]: [
