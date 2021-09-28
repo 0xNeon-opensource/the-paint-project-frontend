@@ -334,6 +334,7 @@ $menu_bar.append(accountNumberLabel);
 $('.mint-menu-button').css('font-weight', 'bold');
 $('.wallet-menu-button').css('font-weight', 'bold');
 $('.colors-menu-button').css('font-weight', 'bold');
+$('.about-menu-button').css('font-weight', 'bold');
 // </menu bar>
 
 let $toolbox = $ToolBox(tools);

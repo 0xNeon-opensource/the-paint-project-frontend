@@ -716,17 +716,7 @@ window.menus = {
 			description: localize("Show the colors minted on the blockchain."),
 		},
 	],
-	[localize("&Help \& About")]: [
-		{
-			item: localize("&Help Topics"),
-			speech_recognition: [
-				"help topics", "help me", "show help", "help", "show help window", "show help topics", "open help",
-				"help viewer", "show help viewer", "open help viewer",
-			],
-			action: ()=> { show_help(); },
-			description: localize("Displays Help for the current task or command."),
-		},
-		MENU_DIVIDER,
+	[localize("&About")]: [
 		{
 			item: localize("&About The Paint Project"),
 			speech_recognition: [
@@ -741,6 +731,16 @@ window.menus = {
 		}
 	],
 	[localize("E&xtras")]: [
+		{
+			item: localize("&Help Topics"),
+			speech_recognition: [
+				"help topics", "help me", "show help", "help", "show help window", "show help topics", "open help",
+				"help viewer", "show help viewer", "open help viewer",
+			],
+			action: ()=> { show_help(); },
+			description: localize("Displays Help for the current task or command."),
+		},
+		MENU_DIVIDER,
 		// {
 		// 	item: localize("&History"),
 		// 	shortcut: "Ctrl+Shift+Y",
