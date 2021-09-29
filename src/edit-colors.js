@@ -56,6 +56,21 @@
 	});
 	$(colorNotAvailContainer).append(colorNotAvailMsg1, colorNotAvailMsg2)
 
+	const allPaintsMintedContainer = document.createElement("div");
+	const allPaintsMintedMsg1 = document.createElement("p");
+	allPaintsMintedMsg1.innerText = "All 1024 Paints have been minted!"
+	$(allPaintsMintedMsg1).css({
+		color: "red",
+		marginLeft: 32
+	});
+	const allPaintsMintedMsg2 = document.createElement("p");
+	allPaintsMintedMsg2.innerText = "See them in the \"Colors\" menu."
+	$(allPaintsMintedMsg2).css({
+		color: "red",
+		marginLeft: 36
+	});
+	$(allPaintsMintedContainer).append(allPaintsMintedMsg1, allPaintsMintedMsg2)
+
 	let mintWaitingMsg = document.createElement("p");
 	mintWaitingMsg.innerText = "Minting, just sit tight...";
 	$(mintWaitingMsg).addClass('rainbow-mint-loading rainbow_text_animated');
@@ -783,7 +798,7 @@ function choose_color(initial_color, callback) {
 	$right.append(rainbow_canvas, luminosity_canvas, result_canvas, lum_arrow_canvas);
 
 	if (!isReadyForMinting) {
-		show_error_message("You'll be able to mint a paint when the project is launched. To be the first to know when we launch, join our Discord. The link is in the About page in the \"Help & About\" menu above.")
+		show_error_message("You'll be able to mint a paint when the project is launched. To be the first to know when we launch, join our Discord with the link at the top of the page.")
 	} else {
 		$w.$Button(localize("Check availability"), () => {
 			resetColorForm();
@@ -792,6 +807,11 @@ function choose_color(initial_color, callback) {
 				blockchain.updateColorList().then(function () {
 					loadingElispes.remove();
 					console.log('updated color list');
+					if (blockchain.state.totalSupply >= 1024) {
+						console.log('all 1024 paints minted');
+						$left.append(allPaintsMintedContainer);
+						return;
+					}
 					if (blockchain.state.colors.includes(hexInput.value)) {
 						$left.append(colorNotAvailContainer);
 					} else {

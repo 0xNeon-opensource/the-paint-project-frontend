@@ -396,7 +396,8 @@ $(accountNumberLabel).css({
 	textAlign: "right",
 	display: "inline-block",
 	lineHeight: "20px",
-	fontWeight: "bold"
+	fontWeight: "bold",
+	marginLeft: 743,
 })
 $menu_bar.append(accountNumberLabel);
 $('.mint-menu-button').css('font-weight', 'bold');

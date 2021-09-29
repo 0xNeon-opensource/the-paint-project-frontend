@@ -1188,7 +1188,7 @@ async function show_all_colors_window(){
 	const maxNumRowsPerPage = 5;
 
 	if (!isReadyForMinting) {
-		show_error_message("You'll be able to see minted paints when the project is launched. To be the first to know when we launch, join our Discord. The link is in the About page in the \"Help & About\" menu above.")
+		show_error_message("You'll be able to see minted paints when the project is launched. To be the first to know when we launch, join our Discord with the link at the top of the page.")
 	}
 	// Create pages
 	const numColorsPerPage = numColorsPerRow * maxNumRowsPerPage;
