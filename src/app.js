@@ -84,7 +84,6 @@ $(connectWalletButton).css({
 // Scroll buttons
 document.addEventListener('scroll', function (event) {
 	let canvasRect = canvas.getBoundingClientRect();
-	console.log(`canvas.getBoundingClientRect();`, Math.round(canvasRect.top));
 	fakeButtonTop -= 1;
 	$(connectWalletButton).css({top: canvasRect.top + 15});
 }, true /*Capture event*/);
