@@ -46244,7 +46244,6 @@ class Blockchain extends React.Component {
       const signer = this.state.provider.getSigner();
       console.log(`signer`, signer);
       await this.updateContractBasedOnWalletConnection(signer, networkData);
-
     } else {
       console.log('hol up, sleeping');
       await this.sleep(1000)
@@ -46331,6 +46330,8 @@ class Blockchain extends React.Component {
       this.updateContractWithSignerInfo();
       await this.showWalletInfo();
     } else {
+      // allow page load
+      this.sleep(1000);
       this.updateContractWithNoWallet(networkData);
     }
     resetColorForm();
