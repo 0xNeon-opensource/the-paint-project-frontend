@@ -1066,6 +1066,14 @@ function show_news(){
 	$news_window.center(); // @XXX - but it helps tho
 }
 
+function show_twitter() {
+	window.open('https://twitter.com/0xPaintProject');
+}
+
+function show_discord() {
+	window.open('https://discord.com/');
+}
+
 async function show_my_colors_window(){
 	if($my_colors_window){
 		const myColorsContainer = document.getElementById("myColorsContainer");

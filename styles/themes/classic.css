@@ -236,6 +236,12 @@ body,
 	outline-offset: 2px;
 }
 
+.fakeButton {
+	height: 44px;
+	width: 178px;
+	padding: 2px;
+	cursor: pointer;
+}
 
 .tool-window {
 	background: var(--ButtonFace);

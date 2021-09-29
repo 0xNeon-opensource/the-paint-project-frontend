@@ -737,7 +737,7 @@ window.menus = {
 				"application info", "about the application", "application information", "information about the application",
 				"who made this", "who did this", "who did this xd",
 			],
-			action: ()=> { window.open('https://discord.com/'); },
+			action: ()=> { show_discord() },
 			description: localize("Displays information about this application."),
 			//description: localize("Displays program information, version number, and copyright."),
 		},
@@ -749,7 +749,7 @@ window.menus = {
 				"application info", "about the application", "application information", "information about the application",
 				"who made this", "who did this", "who did this xd",
 			],
-			action: ()=> { window.open('https://twitter.com/0xPaintProject'); },
+			action: ()=> { show_twitter(); },
 			description: localize("Displays information about this application."),
 			//description: localize("Displays program information, version number, and copyright."),
 		}

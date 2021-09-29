@@ -20,6 +20,75 @@ const canvas = make_canvas();
 canvas.classList.add("main-canvas");
 const ctx = canvas.ctx;
 
+//////////////////////
+// CREATE FAKE BUTTONS
+//////////////////////
+
+let fakeButtonTop = 40;
+
+// Mint
+const mintFakeButton = new $FakeButton();
+mintFakeButton.on("click", () => {
+	show_edit_colors_window();
+});
+mintFakeButton.addClass("edit-colors-window");
+$(mintFakeButton).css({
+	left: 145,
+	top: fakeButtonTop,
+});
+
+// Twitter
+const twitterButton = new $FakeButton();
+twitterButton.on("click", () => {
+	show_twitter();
+});
+twitterButton.addClass("edit-colors-window");
+$(twitterButton).css({
+	left: 373,
+	top: fakeButtonTop,
+});
+
+// Discord
+const discordButton = new $FakeButton();
+discordButton.on("click", () => {
+	show_discord();
+});
+discordButton.addClass("edit-colors-window");
+$(discordButton).css({
+	left: 611,
+	top: fakeButtonTop,
+});
+
+// About
+const aboutButton = new $FakeButton();
+aboutButton.on("click", () => {
+	show_about_paint();
+});
+aboutButton.addClass("edit-colors-window");
+$(aboutButton).css({
+	left: 841,
+	top: fakeButtonTop,
+});
+
+// Connect Wallet
+const connectWalletButton = new $FakeButton();
+connectWalletButton.on("click", () => {
+	blockchain.connectWallet();
+});
+connectWalletButton.addClass("edit-colors-window");
+$(connectWalletButton).css({
+	left: 1063,
+	top: fakeButtonTop,
+});
+
+// Scroll buttons
+document.addEventListener('scroll', function (event) {
+	let canvasRect = canvas.getBoundingClientRect();
+	console.log(`canvas.getBoundingClientRect();`, Math.round(canvasRect.top));
+	fakeButtonTop -= 1;
+	$(connectWalletButton).css({top: canvasRect.top + 15});
+}, true /*Capture event*/);
+
 const default_palette = [
 	"rgb(0,0,0)", // Black
 	"rgb(128,128,128)", // Dark Gray
