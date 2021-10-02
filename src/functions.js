@@ -966,7 +966,7 @@ function show_about_paint(){
 	});
 	
 	$("#discord").on("click", ()=> {
-		window.open('')
+		show_discord();
 	});
 	
 	$("#checking-for-updates").removeAttr("hidden");
@@ -1071,7 +1071,7 @@ function show_twitter() {
 }
 
 function show_discord() {
-	window.open('https://discord.com/');
+	window.open('https://discord.gg/VFvYV9BS');
 }
 
 async function show_my_colors_window(){

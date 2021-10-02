@@ -46950,7 +46950,6 @@ class Blockchain extends React.Component {
       console.log(`signer`, signer);
       await this.updateContractBasedOnWalletConnection(signer, networkData);
     } else {
-      console.log('hol up, sleeping');
       await this.sleep(1000)
       this.showNetworkError();
     }
@@ -47075,8 +47074,10 @@ class Blockchain extends React.Component {
   }
   
   showWalletNotConnectedText() {
-    accountNumberLabel.innerHTML = "Wallet not connected.";
-    $(accountNumberLabel).css({marginLeft: 743})
+    try {
+      accountNumberLabel.innerHTML = "Wallet not connected.";
+      $(accountNumberLabel).css({marginLeft: 743})
+    } catch (error) {}
   }
 
   async getColorsForCurrentAccount() {
