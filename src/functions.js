@@ -969,6 +969,10 @@ function show_about_paint(){
 		show_discord();
 	});
 	
+	$("#contract").on("click", ()=> {
+		show_contract();
+	});
+	
 	$("#checking-for-updates").removeAttr("hidden");
 
 	const url =
@@ -1072,6 +1076,14 @@ function show_twitter() {
 
 function show_discord() {
 	window.open('https://discord.gg/VFvYV9BS');
+}
+
+function show_opensea() {
+	window.open('https://opensea.io/collection/thepaintproject');
+}
+
+function show_contract() {
+	window.open('https://etherscan.io/address/0x08b8f40a42fb035c7cc7406d1511b40f25e2f92c');
 }
 
 async function show_my_colors_window(){

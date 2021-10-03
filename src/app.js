@@ -33,7 +33,18 @@ mintFakeButton.on("click", () => {
 });
 mintFakeButton.addClass("edit-colors-window");
 $(mintFakeButton).css({
-	left: 145,
+	left: 71,
+	top: fakeButtonTop,
+});
+
+// OpenSea
+const openSeaButton = new $FakeButton();
+openSeaButton.on("click", () => {
+	show_opensea();
+});
+openSeaButton.addClass("edit-colors-window");
+$(openSeaButton).css({
+	left: 267,
 	top: fakeButtonTop,
 });
 
@@ -44,7 +55,7 @@ twitterButton.on("click", () => {
 });
 twitterButton.addClass("edit-colors-window");
 $(twitterButton).css({
-	left: 373,
+	left: 465,
 	top: fakeButtonTop,
 });
 
@@ -55,7 +66,7 @@ discordButton.on("click", () => {
 });
 discordButton.addClass("edit-colors-window");
 $(discordButton).css({
-	left: 611,
+	left: 663,
 	top: fakeButtonTop,
 });
 
@@ -66,7 +77,7 @@ aboutButton.on("click", () => {
 });
 aboutButton.addClass("edit-colors-window");
 $(aboutButton).css({
-	left: 841,
+	left: 863,
 	top: fakeButtonTop,
 });
 
@@ -86,6 +97,7 @@ document.addEventListener('scroll', function (event) {
 	let canvasRect = canvas.getBoundingClientRect();
 	fakeButtonTop -= 1;
 	$(mintFakeButton).css({top: canvasRect.top + 15});
+	$(openSeaButton).css({top: canvasRect.top + 15});
 	$(twitterButton).css({top: canvasRect.top + 15});
 	$(discordButton).css({top: canvasRect.top + 15});
 	$(aboutButton).css({top: canvasRect.top + 15});

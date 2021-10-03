@@ -46970,10 +46970,6 @@ class Blockchain extends React.Component {
   }
 
   async connectWallet() {
-    // if (!isReadyForMinting) {
-    //   show_error_message("You'll be able to connect a wallet when the project is launched. To be the first to know when we launch, join our Discord with the link at the top of the page.")
-    //   return;
-    // }
     await this.state.provider.send("eth_requestAccounts", []);
     this.updateContractWithSignerInfo();
     await this.showWalletInfo();
@@ -46984,9 +46980,7 @@ class Blockchain extends React.Component {
     // wait for page to load before listening
     await this.sleep(1000);
     while(true) {
-      console.log(`thePaintProject`, thePaintProject);
       const networkData = thePaintProject.networks[window.ethereum.networkVersion];
-      console.log(`networkData`, networkData);
       if (networkData) {
         this.closeNetworkError();
         const signer = this.state.provider.getSigner();
