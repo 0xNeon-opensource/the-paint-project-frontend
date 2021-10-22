@@ -1075,7 +1075,7 @@ function show_twitter() {
 }
 
 function show_discord() {
-	window.open('https://discord.gg/VFvYV9BS');
+	window.open('https://discord.gg/4rA23XrVyH');
 }
 
 function show_opensea() {
